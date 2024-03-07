@@ -1,4 +1,3 @@
-
 class CardItem {
   final String val;
   bool isTapped;
