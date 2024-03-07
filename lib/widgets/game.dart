@@ -29,7 +29,7 @@ class _GameState extends State<Game> {
     score = 0;
   }
 
-  static List<CardItem> _shuffleCards(List<CardItem> cards) {
+  List<CardItem> _shuffleCards(List<CardItem> cards) {
     Random rng = Random();
     for(int i = cards.length-1; i >= 1; --i){
       int newIdx = rng.nextInt(i);
@@ -64,7 +64,7 @@ class _GameState extends State<Game> {
 
   void startTimer(){
     counter = 60;
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if(counter > 0){
         setState(() {
           counter--;
@@ -79,8 +79,8 @@ class _GameState extends State<Game> {
     if(counter == 0){
       return;
     }
+    card.isTapped = true;
     setState(() {
-      card.isTapped = true;
       tappedCard ??= card;
       if(tappedCard == card){
         return;
@@ -92,7 +92,7 @@ class _GameState extends State<Game> {
         tappedCard = null;
       }
       else{
-        Timer(Duration(milliseconds: 200), () {
+        Timer(const Duration(milliseconds: 200), () {
             tappedCard?.isTapped = false;
             card.isTapped = false;
             tappedCard = null;
