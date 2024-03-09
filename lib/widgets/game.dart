@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:memory_game/models/card_item.dart';
+import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/card_widget.dart';
+import 'package:memory_game/widgets/leaderboard.dart';
 
 class Game extends StatefulWidget {
-  const Game({super.key});
+  String currentPlayer;
+  Game({super.key, required this.currentPlayer});
   @override
   State<Game> createState() => _GameState();
 }
@@ -71,6 +73,7 @@ class _GameState extends State<Game> {
         });
       } else {
         timer.cancel();
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(player: Player(name: widget.currentPlayer, score: score))));
       }
     });
   }
@@ -86,7 +89,7 @@ class _GameState extends State<Game> {
         return;
       }
       if(tappedCard?.val == card.val){
-        ++score;
+        score += counter;
         validPairs.add(tappedCard!);
         validPairs.add(card);
         tappedCard = null;
@@ -101,13 +104,14 @@ class _GameState extends State<Game> {
     });
     if(validPairs.length == cards.length){
       timer.cancel();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(player: Player(name: widget.currentPlayer, score: score))));
     }
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: counter != 0 ? Text("Time: $counter Score: $score") : const Text("Time's up!"),
+        title: Center(child: (counter != 0) ? Text("Time: $counter Score: $score") : const Text("Time's up!")),
         backgroundColor: counter != 0 ? Colors.blue : Colors.red,
         ),
       body: GridView.count(

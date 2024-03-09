@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '749085801812',
     projectId: 'match-a-saurus',
     authDomain: 'match-a-saurus.firebaseapp.com',
+    databaseURL: 'https://match-a-saurus-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'match-a-saurus.appspot.com',
     measurementId: 'G-6DFC25TR6P',
   );
@@ -58,6 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:749085801812:android:14bc74c20b963e7c259cc1',
     messagingSenderId: '749085801812',
     projectId: 'match-a-saurus',
+    databaseURL: 'https://match-a-saurus-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'match-a-saurus.appspot.com',
   );
 
@@ -66,6 +68,7 @@ class DefaultFirebaseOptions {
     appId: '1:749085801812:ios:38ce6ae746e59873259cc1',
     messagingSenderId: '749085801812',
     projectId: 'match-a-saurus',
+    databaseURL: 'https://match-a-saurus-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'match-a-saurus.appspot.com',
     iosBundleId: 'com.example.memoryGame',
   );
@@ -75,6 +78,7 @@ class DefaultFirebaseOptions {
     appId: '1:749085801812:ios:f06bee9e1a171fcd259cc1',
     messagingSenderId: '749085801812',
     projectId: 'match-a-saurus',
+    databaseURL: 'https://match-a-saurus-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'match-a-saurus.appspot.com',
     iosBundleId: 'com.example.memoryGame.RunnerTests',
   );
