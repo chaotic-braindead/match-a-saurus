@@ -25,7 +25,7 @@ class _GameState extends State<Game> {
     cards = _getRandomCards(12);
     tappedCard = null;
     validPairs = [];
-    startTimer();
+    _startTimer();
     score = 0;
   }
 
@@ -62,7 +62,7 @@ class _GameState extends State<Game> {
     }
   }
 
-  void startTimer(){
+  void _startTimer(){
     counter = 60;
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if(counter > 0){

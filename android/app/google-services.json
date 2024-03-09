@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "749085801812",
+    "project_id": "match-a-saurus",
+    "storage_bucket": "match-a-saurus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749085801812:android:14bc74c20b963e7c259cc1",
+        "android_client_info": {
+          "package_name": "com.example.memory_game"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFHKoXc2N3RFIj8JfbJzBtzGvmY0auUKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
