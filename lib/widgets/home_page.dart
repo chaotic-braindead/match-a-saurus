@@ -92,10 +92,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text("Memory Game")),
-        backgroundColor: Colors.blue,
-        automaticallyImplyLeading: false,
-      ),
+        title: const Text("match-a-saurus"),
+        backgroundColor: Colors.green,),
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

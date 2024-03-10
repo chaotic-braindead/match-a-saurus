@@ -128,11 +128,13 @@ class _GameState extends State<Game> {
     else{
       setState(() => _enableTaps = false);
       Timer(const Duration(milliseconds: 500), () {
+        card.isTapped = false;
+        setState(() { 
           _tappedCard?.isTapped = false;
-          card.isTapped = false;
           _tappedCard = null;
-          setState(() => _enableTaps = true);
+          _enableTaps = true;
         });
+      });
     }
     if(_validPairs.length == _cards.length){
       _timer.cancel();
