@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/game.dart';
@@ -46,48 +47,74 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildPopupDialog(BuildContext context) {
-  return StatefulBuilder(
-    builder: (context, setState) {
-      return AlertDialog(
-    title: const Text('Options'),
-    content: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [const Text("Difficulty"),  
-                      SizedBox(
-                        width: 100, 
-                        child: DropdownButton<String>(
-                              value: _difficulty,
-                              onChanged: (value) async { 
-                                await Database.optionsBox?.put("difficulty", value!);
-                                setState(() => _difficulty = value!); 
-                              },
-                              items: difficultyList.map((value) {
-                                return DropdownMenuItem(value: value, child: Text(value));
-                              }).toList()
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return AlertDialog(
+      title: const Text('Options'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [const Text("Difficulty"),  
+                        SizedBox(
+                          width: 100, 
+                          child: DropdownButton<String>(
+                                value: _difficulty,
+                                onChanged: (value) async { 
+                                  await Database.optionsBox?.put("difficulty", value!);
+                                  setState(() => _difficulty = value!); 
+                                },
+                                items: difficultyList.map((value) {
+                                  return DropdownMenuItem(value: value, child: Text(value));
+                                }).toList()
+                          )
                         )
-                      )
-                    ]
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [const Text("Playing as"),  SizedBox(width: 100, child:TextField(controller: _controller,))]),
-        
-      ],
-    ),
-    actions: <Widget>[
-      ElevatedButton(
-        onPressed: () {
-          _updateCurrentPlayer(Player(name: _controller.text));
-        },
-        child: const Text("Save"),
+                      ]
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [const Text("Playing as"),  SizedBox(width: 100, child:TextField(controller: _controller,))]),
+          
+        ],
       ),
-    ]);
-  });
-}
+      actions: <Widget>[
+        ElevatedButton(
+          onPressed: () {
+            _updateCurrentPlayer(Player(name: _controller.text));
+          },
+          child: const Text("Save"),
+        ),
+      ]);
+    });
+  }
+
+   Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Are you sure?'),
+            content: const Text('Do you want to exit the App'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                  },
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
+  // Page Layout
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,21 +126,28 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [ElevatedButton(
+            children: [
+              ElevatedButton(
               child: const Text("Play"),
               onPressed: () {
                 Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (context) => const Game())
                 );
               }),
-                ElevatedButton(
-                child: const Text("Options"),
+              ElevatedButton(
+              child: const Text("Options"),
+              onPressed: () {
+                showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) => _buildPopupDialog(context),);
+              }),
+              ElevatedButton(
+                child: const Text("Exit"),
                 onPressed: () {
-                  showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) => _buildPopupDialog(context),);
-                }),
+                  _onWillPop();
+                },
+              )
             ]
         ),
       ),
