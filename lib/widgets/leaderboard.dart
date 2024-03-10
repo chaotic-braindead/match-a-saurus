@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/player.dart';
@@ -7,8 +6,8 @@ import 'package:memory_game/widgets/home_page.dart';
 import 'package:memory_game/widgets/player_widget.dart';
 
 class Leaderboard extends StatefulWidget {
-  int score;
-  Leaderboard({super.key, required this.score});
+  final int score;
+  const Leaderboard({super.key, required this.score});
   @override
   State<Leaderboard> createState() => _LeaderboardState();
 }
@@ -24,6 +23,7 @@ class _LeaderboardState extends State<Leaderboard> {
     }
   }
 
+  @override
   void initState() {
     super.initState();
     setState(() { 
@@ -82,8 +82,7 @@ class _LeaderboardState extends State<Leaderboard> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [Column(children: scores),
-              Row(children: [Text("Personal Best"), Spacer(), Text((pb?.score!).toString())],),
-              //const Spacer(), 
+              Row(children: [const Text("Personal Best"), const Spacer(), Text((pb?.score!).toString())],),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -101,5 +100,4 @@ class _LeaderboardState extends State<Leaderboard> {
         ),
     );
   }
-  
 }

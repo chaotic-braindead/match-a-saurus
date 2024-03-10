@@ -13,22 +13,21 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> { 
-  late List<CardItem> cards;
-  late List<CardItem> validPairs;
-  late CardItem? tappedCard;
-  late int counter;
-  late Timer timer;
-  late int score;
-  bool enableTaps = true;
+  late List<CardItem> _cards;
+  late List<CardItem> _validPairs;
+  late CardItem? _tappedCard;
+  late int _counter;
+  late Timer _timer;
+  int _score = 0;
+  bool _enableTaps = true;
   
   @override
   void initState(){
     super.initState();
-    cards = _getRandomCards(12);
-    tappedCard = null;
-    validPairs = [];
+    _cards = _getRandomCards(12);
+    _tappedCard = null;
+    _validPairs = [];
     _startTimer(60);
-    score = 0;
   }
 
   List<CardItem> _shuffleCards(List<CardItem> cards) {
@@ -65,51 +64,55 @@ class _GameState extends State<Game> {
   }
 
   void _startTimer(int time){
-    counter = time;
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if(counter > 0){
+    _counter = time;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if(_counter > 0){
         setState(() {
-         --counter;
+         --_counter;
         });
       } else {
         timer.cancel();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: score)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
       }
     });
   }
 
   void _handleTap(CardItem card){
-    if(counter == 0){
+    if(_counter == 0){
       return;
     }
     card.isTapped = true;
-    setState(() {
-      tappedCard ??= card;
-    });
-    if(tappedCard == card){
+    setState(() => _tappedCard ??= card);
+    if(_tappedCard == card){
       return;
     }
-    if(tappedCard?.val == card.val){
+    if(_tappedCard?.val == card.val){
       setState(() {
-        score += counter;
-        validPairs.add(tappedCard!);
-        validPairs.add(card);
-        tappedCard = null;
+        _score += _counter;
+        _validPairs.add(_tappedCard!);
+        _validPairs.add(card);
+        _tappedCard = null;
       });
     }
     else{
-      setState(() => enableTaps = false);
+      setState(() => _enableTaps = false);
       Timer(const Duration(milliseconds: 500), () {
-          tappedCard?.isTapped = false;
+          _tappedCard?.isTapped = false;
           card.isTapped = false;
-          tappedCard = null;
-          setState(() => enableTaps = true);
+          _tappedCard = null;
+          setState(() => _enableTaps = true);
         });
     }
-    if(validPairs.length == cards.length){
-      timer.cancel();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: score)));
+    if(_validPairs.length == _cards.length){
+      _timer.cancel();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
     }
+  }
+
+  String _secondsToMinutes(int s){
+    int minutes = (s / 60).truncate();
+    int seconds = (s % 60);
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
   Widget _buildPopupDialog(BuildContext context) {
@@ -120,7 +123,7 @@ class _GameState extends State<Game> {
         mainAxisSize: MainAxisSize.min,
         children: [ElevatedButton(
           onPressed: () {
-            _startTimer(counter);
+            _startTimer(_counter);
             Navigator.of(context).pop();
           },
           child: const Text("Play")),
@@ -138,10 +141,10 @@ class _GameState extends State<Game> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: (counter != 0) ? Text("Time: $counter Score: $score") : const Text("Time's up!")),
-        backgroundColor: counter != 0 ? Colors.blue : Colors.red,
+        title: Center(child: (_counter != 0) ? Text("Time: ${_secondsToMinutes(_counter)} Score: $_score") : const Text("Time's up!")),
+        backgroundColor: _counter != 0 ? Colors.blue : Colors.red,
         actions: [IconButton(icon: Icon(Icons.pause), onPressed: () { 
-              timer.cancel();
+              _timer.cancel();
               showDialog(
                   context: context,
                   barrierDismissible: false,
@@ -152,12 +155,13 @@ class _GameState extends State<Game> {
         ),
       body: GridView.count(
         padding: const EdgeInsets.all(20),
+        childAspectRatio: 0.7,
         crossAxisCount: 3,
         mainAxisSpacing: 20.0,
         crossAxisSpacing: 20.0,
-        children: cards.map((card) => CardWidget(
+        children: _cards.map((card) => CardWidget(
           card: card,
-          onTap: enableTaps ? _handleTap : null,
+          onTap: _enableTaps ? _handleTap : null,
           )).toList()
         ),
     );
