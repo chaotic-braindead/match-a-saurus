@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:memory_game/db/db.dart';
 import 'package:memory_game/firebase_options.dart';
+import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -8,6 +11,11 @@ Future main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
+  await Hive.initFlutter();
+  if(!Hive.isAdapterRegistered(1)){
+    Hive.registerAdapter(PlayerAdapter());
+  }
+  await Database.initHive();
   runApp(const MemoryGame());
 }
 

@@ -1,10 +1,17 @@
+import 'package:hive/hive.dart';
+part 'player.g.dart';
+
+@HiveType(typeId: 1)
 class Player {
-  final String name;
-  final int score;
+  @HiveField(0)
+  String name;
+  @HiveField(1)
+  int? score;
   Player({
     required this.name,
-    required this.score
+    this.score
   });
+
   @override
   bool operator==(Object other){
     return other is Player && name == other.name && score == other.score;

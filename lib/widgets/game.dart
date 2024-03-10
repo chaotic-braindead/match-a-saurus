@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:memory_game/models/card_item.dart';
-import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/card_widget.dart';
 import 'package:memory_game/widgets/leaderboard.dart';
 
 class Game extends StatefulWidget {
-  String currentPlayer;
-  Game({super.key, required this.currentPlayer});
+  const Game({super.key});
   @override
   State<Game> createState() => _GameState();
 }
@@ -73,7 +71,7 @@ class _GameState extends State<Game> {
         });
       } else {
         timer.cancel();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(player: Player(name: widget.currentPlayer, score: score))));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: score)));
       }
     });
   }
@@ -104,7 +102,7 @@ class _GameState extends State<Game> {
     });
     if(validPairs.length == cards.length){
       timer.cancel();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(player: Player(name: widget.currentPlayer, score: score))));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: score)));
     }
   }
   @override

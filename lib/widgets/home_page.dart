@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_game/db/db.dart';
+import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/game.dart';
-import 'package:memory_game/widgets/options.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late String currentPlayer;
+  late Player? currentPlayer;
   late TextEditingController _controller;
   @override 
   void setState(fn){
@@ -22,17 +22,19 @@ class _HomePageState extends State<HomePage> {
   @override 
   void initState(){
     super.initState();
-    Database.instance.collection("players").limit(1).get().then((event) {
-      if(event.docs.isNotEmpty){
-        setState(() => currentPlayer = event.docs[0].data()["name"]);
-      }
-      else{
-        setState(() => currentPlayer = "Guest");
-      }
-      setState(() => _controller = TextEditingController(text: currentPlayer));
-      }
-    );
+    setState(() => currentPlayer = Database.playerBox?.get("currentPlayer", defaultValue: Player(name: "Guest")));
+    setState(() => _controller = TextEditingController(text: currentPlayer?.name)); 
   }
+
+  void _updateCurrentPlayer(Player newPlayer) async {
+    print(newPlayer.name);
+    if(newPlayer.name != "Guest"){
+      await Database.playerBox?.put("currentPlayer", newPlayer);
+      setState(() => currentPlayer?.name = _controller.text); 
+    }
+    Navigator.of(context).pop();
+  }
+
   Widget _buildPopupDialog(BuildContext context) {
   return AlertDialog(
     title: const Text('Options'),
@@ -42,14 +44,13 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [const Text("Player"), const Spacer(), SizedBox(width: 100, child:TextField(controller: _controller,))],)
+          children: [const Text("Playing as"),  SizedBox(width: 100, child:TextField(controller: _controller,))],)
       ],
     ),
     actions: <Widget>[
       ElevatedButton(
         onPressed: () {
-          setState(() { currentPlayer = _controller.text; });
-          Navigator.of(context).pop();
+          _updateCurrentPlayer(Player(name: _controller.text));
         },
         child: const Text("Save"),
       ),
@@ -71,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text("Play"),
               onPressed: () { 
                 Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Game(currentPlayer: currentPlayer))
+                  context, MaterialPageRoute(builder: (context) => Game())
                 );
               }),
                 ElevatedButton(
@@ -79,6 +80,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   showDialog(
                   context: context,
+                  barrierDismissible: false,
                   builder: (BuildContext context) => _buildPopupDialog(context),);
                 }),
             ]
