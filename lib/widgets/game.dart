@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:memory_game/models/card_item.dart';
 import 'package:memory_game/widgets/card_widget.dart';
+import 'package:memory_game/widgets/home_page.dart';
 import 'package:memory_game/widgets/leaderboard.dart';
 
 class Game extends StatefulWidget {
@@ -25,7 +26,7 @@ class _GameState extends State<Game> {
     cards = _getRandomCards(12);
     tappedCard = null;
     validPairs = [];
-    _startTimer();
+    _startTimer(60);
     score = 0;
   }
 
@@ -62,12 +63,12 @@ class _GameState extends State<Game> {
     }
   }
 
-  void _startTimer(){
-    counter = 60;
+  void _startTimer(int time){
+    counter = time;
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if(counter > 0){
         setState(() {
-          counter--;
+         --counter;
         });
       } else {
         timer.cancel();
@@ -105,12 +106,44 @@ class _GameState extends State<Game> {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: score)));
     }
   }
+
+  Widget _buildPopupDialog(BuildContext context) {
+  return AlertDialog(
+    title: const Center(child: Text('Paused')),
+    actions: <Widget>[
+      Center(child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [ElevatedButton(
+          onPressed: () {
+            _startTimer(counter);
+            Navigator.of(context).pop();
+          },
+          child: const Text("Play")),
+          ElevatedButton(
+          onPressed: () {
+           Navigator.pop(context);
+           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+          },
+          child: const Text("Quit")),
+        ])),
+    ],
+  );
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: (counter != 0) ? Text("Time: $counter Score: $score") : const Text("Time's up!")),
         backgroundColor: counter != 0 ? Colors.blue : Colors.red,
+        actions: [IconButton(icon: Icon(Icons.pause), onPressed: () { 
+              timer.cancel();
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) => _buildPopupDialog(context)
+              );
+            }) 
+          ],
         ),
       body: GridView.count(
         padding: const EdgeInsets.all(20),

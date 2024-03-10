@@ -36,22 +36,18 @@ class _LeaderboardState extends State<Leaderboard> {
   void _addScore(){
     if(currentPlayer?.name == "Guest"){
       _getLeaderboard();
-      //setState(() => scores.add(PlayerWidget(player: currentPlayer!, color: Colors.blue)));
       return;
     }
     Database.firebase.collection("players").doc(currentPlayer?.name).get()
       .then((value) {
-        if(value.exists){
-          if((currentPlayer?.score!)! > value.data()?["score"]){
-            Database.firebase.collection("players").doc(currentPlayer?.name).update(currentPlayer!.toJson());
-          }
+        if(!value.exists){
+          Database.firebase.collection("players").doc(currentPlayer?.name).set(currentPlayer!.toJson());
+          return;
         }
-        else{
-           Database.firebase.collection("players").doc(currentPlayer?.name).set(currentPlayer!.toJson());
+        if((currentPlayer?.score!)! > value.data()?["score"]){
+          Database.firebase.collection("players").doc(currentPlayer?.name).update(currentPlayer!.toJson());
         }
       }).whenComplete(() => _getLeaderboard());
-    // Database.instance.collection("players").doc(widget.player.name).set(widget.player.toJson());
-    
   }
   void _getLeaderboard(){
     Database.firebase.collection("players").orderBy("score", descending: true).limit(10).get().then((event) => {

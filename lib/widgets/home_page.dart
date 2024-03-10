@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text("Play"),
               onPressed: () { 
                 Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Game())
+                  context, MaterialPageRoute(builder: (context) => const Game())
                 );
               }),
                 ElevatedButton(
