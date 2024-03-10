@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _updateCurrentPlayer(Player newPlayer) async {
-    print(newPlayer.name);
     if(newPlayer.name != "Guest"){
       await Database.playerBox?.put("currentPlayer", newPlayer);
       setState(() => currentPlayer?.name = _controller.text); 

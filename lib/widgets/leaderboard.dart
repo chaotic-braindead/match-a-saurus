@@ -16,6 +16,7 @@ class Leaderboard extends StatefulWidget {
 class _LeaderboardState extends State<Leaderboard> {
   late List<PlayerWidget> scores;
   late Player? currentPlayer;
+  late Player? pb;
   @override
   void setState(fn){
     if(mounted){
@@ -23,7 +24,7 @@ class _LeaderboardState extends State<Leaderboard> {
     }
   }
 
-  void initState(){
+  void initState() {
     super.initState();
     setState(() { 
       currentPlayer = Database.playerBox?.get("currentPlayer", defaultValue: Player(name: "Guest")); 
@@ -31,6 +32,12 @@ class _LeaderboardState extends State<Leaderboard> {
     });
     scores = [];
     _addScore();
+    setState(() => pb = Database.playerBox?.get("personalBest"));
+    if(pb == null || (currentPlayer?.score)! > (pb?.score)!){
+      Database.playerBox?.put("personalBest", currentPlayer!).then((value){
+        setState(() => pb = currentPlayer!);
+      });
+    }
   }
 
   void _addScore(){
@@ -75,7 +82,8 @@ class _LeaderboardState extends State<Leaderboard> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [Column(children: scores),
-              const Spacer(), 
+              Row(children: [Text("Personal Best"), Spacer(), Text((pb?.score!).toString())],),
+              //const Spacer(), 
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
