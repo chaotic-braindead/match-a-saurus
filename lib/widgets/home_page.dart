@@ -3,6 +3,8 @@ import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/game.dart';
 
+final List<String> difficultyList = <String>['Easy', 'Medium', 'Hard'];
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -13,6 +15,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Player? currentPlayer;
   late TextEditingController _controller;
+  String _difficulty = difficultyList.first;
+
   @override 
   void setState(fn){
     if(mounted){
@@ -24,6 +28,13 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     setState(() => currentPlayer = Database.playerBox?.get("currentPlayer", defaultValue: Player(name: "Guest")));
     setState(() => _controller = TextEditingController(text: currentPlayer?.name)); 
+    String? diff = Database.optionsBox?.get("difficulty");
+    if(diff != null){
+      setState(() => _difficulty = diff);
+    } 
+    else{
+      Database.optionsBox?.put("difficulty", difficultyList.first);
+    }
   }
 
   void _updateCurrentPlayer(Player newPlayer) async {
@@ -35,7 +46,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildPopupDialog(BuildContext context) {
-  return AlertDialog(
+  return StatefulBuilder(
+    builder: (context, setState) {
+      return AlertDialog(
     title: const Text('Options'),
     content: Column(
       mainAxisSize: MainAxisSize.min,
@@ -43,7 +56,26 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [const Text("Playing as"),  SizedBox(width: 100, child:TextField(controller: _controller,))],)
+          children: [const Text("Difficulty"),  
+                      SizedBox(
+                        width: 100, 
+                        child: DropdownButton<String>(
+                              value: _difficulty,
+                              onChanged: (value) async { 
+                                await Database.optionsBox?.put("difficulty", value!);
+                                setState(() => _difficulty = value!); 
+                              },
+                              items: difficultyList.map((value) {
+                                return DropdownMenuItem(value: value, child: Text(value));
+                              }).toList()
+                        )
+                      )
+                    ]
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [const Text("Playing as"),  SizedBox(width: 100, child:TextField(controller: _controller,))]),
+        
       ],
     ),
     actions: <Widget>[
@@ -53,8 +85,8 @@ class _HomePageState extends State<HomePage> {
         },
         child: const Text("Save"),
       ),
-    ],
-  );
+    ]);
+  });
 }
   @override
   Widget build(BuildContext context) {
@@ -69,7 +101,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [ElevatedButton(
               child: const Text("Play"),
-              onPressed: () { 
+              onPressed: () {
                 Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (context) => const Game())
                 );

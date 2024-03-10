@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/card_item.dart';
 import 'package:memory_game/widgets/card_widget.dart';
 import 'package:memory_game/widgets/home_page.dart';
@@ -18,13 +19,42 @@ class _GameState extends State<Game> {
   late CardItem? _tappedCard;
   late int _counter;
   late Timer _timer;
+  late int _rows;
+  late int _cols;
   int _score = 0;
+  late int _multiplier; 
   bool _enableTaps = true;
   
   @override
   void initState(){
     super.initState();
-    _cards = _getRandomCards(12);
+    String? difficulty = Database.optionsBox?.get("difficulty");
+    switch(difficulty){
+      case "Easy": 
+        setState(() {
+          _multiplier = 1;
+          _rows = 3;
+          _cols = 4;
+        }); 
+        break;
+      case "Medium":
+         setState(() {
+          _multiplier = 2;
+          _rows = 4;
+          _cols = 5;
+        }); 
+        break;
+      case "Hard":
+       setState(() {
+          _multiplier = 3;
+          _rows = 6;
+          _cols = 6;
+        }); 
+        break;
+      default:
+        throw Exception("Must not be reached");
+    }
+    _cards = _getRandomCards(_rows*_cols);
     _tappedCard = null;
     _validPairs = [];
     _startTimer(60);
@@ -89,6 +119,7 @@ class _GameState extends State<Game> {
     if(_tappedCard?.val == card.val){
       setState(() {
         _score += _counter;
+        _score *= _multiplier;
         _validPairs.add(_tappedCard!);
         _validPairs.add(card);
         _tappedCard = null;
@@ -143,7 +174,7 @@ class _GameState extends State<Game> {
       appBar: AppBar(
         title: Center(child: (_counter != 0) ? Text("Time: ${_secondsToMinutes(_counter)} Score: $_score") : const Text("Time's up!")),
         backgroundColor: _counter != 0 ? Colors.blue : Colors.red,
-        actions: [IconButton(icon: Icon(Icons.pause), onPressed: () { 
+        actions: [IconButton(icon: const Icon(Icons.pause), onPressed: () { 
               _timer.cancel();
               showDialog(
                   context: context,
@@ -155,10 +186,10 @@ class _GameState extends State<Game> {
         ),
       body: GridView.count(
         padding: const EdgeInsets.all(20),
-        childAspectRatio: 0.7,
-        crossAxisCount: 3,
-        mainAxisSpacing: 20.0,
-        crossAxisSpacing: 20.0,
+        childAspectRatio: _rows == 6 ? 0.63 : 0.7,
+        crossAxisCount: _rows,
+        mainAxisSpacing: _rows == 6 ? 35.0 : 20.0,
+        crossAxisSpacing: _rows == 6? 10.0 : 20.0,
         children: _cards.map((card) => CardWidget(
           card: card,
           onTap: _enableTaps ? _handleTap : null,
