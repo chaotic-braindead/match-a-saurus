@@ -19,6 +19,7 @@ class _GameState extends State<Game> {
   late int counter;
   late Timer timer;
   late int score;
+  bool enableTaps = true;
   
   @override
   void initState(){
@@ -84,23 +85,27 @@ class _GameState extends State<Game> {
     card.isTapped = true;
     setState(() {
       tappedCard ??= card;
-      if(tappedCard == card){
-        return;
-      }
-      if(tappedCard?.val == card.val){
+    });
+    if(tappedCard == card){
+      return;
+    }
+    if(tappedCard?.val == card.val){
+      setState(() {
         score += counter;
         validPairs.add(tappedCard!);
         validPairs.add(card);
         tappedCard = null;
-      }
-      else{
-        Timer(const Duration(milliseconds: 200), () {
-            tappedCard?.isTapped = false;
-            card.isTapped = false;
-            tappedCard = null;
-          });
-      }
-    });
+      });
+    }
+    else{
+      setState(() => enableTaps = false);
+      Timer(const Duration(milliseconds: 500), () {
+          tappedCard?.isTapped = false;
+          card.isTapped = false;
+          tappedCard = null;
+          setState(() => enableTaps = true);
+        });
+    }
     if(validPairs.length == cards.length){
       timer.cancel();
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: score)));
@@ -152,7 +157,7 @@ class _GameState extends State<Game> {
         crossAxisSpacing: 20.0,
         children: cards.map((card) => CardWidget(
           card: card,
-          onTap: _handleTap,
+          onTap: enableTaps ? _handleTap : null,
           )).toList()
         ),
     );

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class CardWidget extends StatefulWidget {
   final CardItem card;
-  final Function(CardItem) onTap;
-  const CardWidget({required this.card, required this.onTap, super.key});
+  final Function(CardItem)? onTap;
+  const CardWidget({required this.card, this.onTap, super.key});
   @override 
   State<CardWidget> createState () => _CardWidgetState();
 }
@@ -14,7 +14,9 @@ class _CardWidgetState extends State<CardWidget> {
   Widget build(BuildContext context) {
    return GestureDetector(
       onTap: () {
-        widget.onTap(widget.card);
+        if(widget.onTap != null){
+          widget.onTap!(widget.card);
+        }
       },
       child: Container(
         alignment: Alignment.center,
