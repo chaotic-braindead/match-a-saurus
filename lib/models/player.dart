@@ -7,16 +7,14 @@ class Player {
   String name;
   @HiveField(1)
   int? score;
-  Player({
-    required this.name,
-    this.score
-  });
+  Player({required this.name, this.score});
 
   @override
-  bool operator==(Object other){
+  bool operator ==(Object other) {
     return other is Player && name == other.name && score == other.score;
   }
-  Map<String, dynamic> toJson(){
+
+  Map<String, dynamic> toJson() {
     return {"name": name, "score": score};
   }
 }

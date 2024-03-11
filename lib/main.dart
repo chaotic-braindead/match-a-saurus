@@ -8,11 +8,9 @@ import 'package:firebase_core/firebase_core.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter();
-  if(!Hive.isAdapterRegistered(1)){
+  if (!Hive.isAdapterRegistered(1)) {
     Hive.registerAdapter(PlayerAdapter());
   }
   await Database.initHive();
@@ -24,7 +22,7 @@ class MemoryGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Match a Saurus',
+      title: 'Memory Game',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

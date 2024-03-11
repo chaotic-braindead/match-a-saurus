@@ -13,12 +13,12 @@ class Leaderboard extends StatefulWidget {
 }
 
 class _LeaderboardState extends State<Leaderboard> {
-  late List<PlayerWidget> scores;
-  late Player? currentPlayer;
-  late Player? pb;
+  late List<PlayerWidget> _scores;
+  late Player? _currentPlayer;
+  late Player? _pb;
   @override
-  void setState(fn){
-    if(mounted){
+  void setState(fn) {
+    if (mounted) {
       super.setState(fn);
     }
   }
@@ -26,49 +26,69 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   void initState() {
     super.initState();
-    setState(() { 
-      currentPlayer = Database.playerBox?.get("currentPlayer", defaultValue: Player(name: "Guest")); 
-      currentPlayer?.score = widget.score;
-    });
-    scores = [];
+    _currentPlayer = Database.playerBox
+        ?.get("currentPlayer", defaultValue: Player(name: "Guest"));
+    _currentPlayer?.score = widget.score;
+    _scores = [];
     _addScore();
-    setState(() => pb = Database.playerBox?.get("personalBest"));
-    if(pb == null || (currentPlayer?.score)! > (pb?.score)!){
-      Database.playerBox?.put("personalBest", currentPlayer!).then((value){
-        setState(() => pb = currentPlayer!);
-      });
+    _pb = Database.playerBox?.get("personalBest");
+    if (_pb == null || (_currentPlayer?.score)! > (_pb?.score)!) {
+      Database.playerBox
+          ?.put("personalBest", _currentPlayer!)
+          .then((value) => _pb = _currentPlayer!);
     }
   }
 
-  void _addScore(){
-    if(currentPlayer?.name == "Guest"){
+  void _addScore() {
+    if (_currentPlayer?.name == "Guest") {
       _getLeaderboard();
       return;
     }
-    Database.firebase.collection("players").doc(currentPlayer?.name).get()
-      .then((value) {
-        if(!value.exists){
-          Database.firebase.collection("players").doc(currentPlayer?.name).set(currentPlayer!.toJson());
-          return;
-        }
-        if((currentPlayer?.score!)! > value.data()?["score"]){
-          Database.firebase.collection("players").doc(currentPlayer?.name).update(currentPlayer!.toJson());
-        }
-      }).whenComplete(() => _getLeaderboard());
-  }
-  void _getLeaderboard(){
-    Database.firebase.collection("players").orderBy("score", descending: true).limit(10).get().then((event) => {
-      for(var doc in event.docs){
-        setState(() => scores.add(PlayerWidget(player: Player(name: doc.data()["name"], score: doc.data()["score"]))))
+    Database.firebase
+        .collection("players")
+        .doc(_currentPlayer?.name)
+        .get()
+        .then((value) {
+      if (!value.exists) {
+        Database.firebase
+            .collection("players")
+            .doc(_currentPlayer?.name)
+            .set(_currentPlayer!.toJson());
+        return;
       }
-    }).whenComplete((){ 
-      for(var wid in scores){
-        if(wid.player == currentPlayer!){
+      if ((_currentPlayer?.score!)! > value.data()?["score"]) {
+        Database.firebase
+            .collection("players")
+            .doc(_currentPlayer?.name)
+            .update(_currentPlayer!.toJson());
+      }
+    }).whenComplete(() => _getLeaderboard());
+  }
+
+  void _getLeaderboard() {
+    Database.firebase
+        .collection("players")
+        .orderBy("score", descending: true)
+        .limit(10)
+        .get()
+        .then((event) => {
+              for (var doc in event.docs)
+                {
+                  setState(() => _scores.add(PlayerWidget(
+                      player: Player(
+                          name: doc.data()["name"],
+                          score: doc.data()["score"]))))
+                }
+            })
+        .whenComplete(() {
+      for (var wid in _scores) {
+        if (wid.player == _currentPlayer!) {
           wid.color = Colors.blue;
           return;
         }
       }
-      setState(() => scores.add(PlayerWidget(player: currentPlayer!, color: Colors.blue))); 
+      setState(() => _scores
+          .add(PlayerWidget(player: _currentPlayer!, color: Colors.blue)));
     });
   }
 
@@ -79,25 +99,28 @@ class _LeaderboardState extends State<Leaderboard> {
         title: const Center(child: Text("High Scores")),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [Column(children: scores),
-              Row(children: [const Text("Personal Best"), const Spacer(), Text((pb?.score!).toString())],),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                    ElevatedButton(
-                      onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Game())), 
-                      child: const Text("Play Again")),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage())),
-                      child: const Text("Back to Home"),
-                    )
-                ]
+          padding: const EdgeInsets.all(20),
+          child: Column(children: [
+            Column(children: _scores),
+            Row(
+              children: [
+                const Text("Personal Best"),
+                const Spacer(),
+                Text((_pb?.score!).toString())
+              ],
+            ),
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              ElevatedButton(
+                  onPressed: () => Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const Game())),
+                  child: const Text("Play Again")),
+              ElevatedButton(
+                onPressed: () => Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const HomePage())),
+                child: const Text("Back to Home"),
               )
-            ]
-          )
-        ),
+            ])
+          ])),
     );
   }
 }

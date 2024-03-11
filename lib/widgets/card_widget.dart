@@ -7,16 +7,16 @@ class CardWidget extends StatefulWidget {
   final CardItem card;
   final Function(CardItem)? onTap;
   const CardWidget({required this.card, this.onTap, super.key});
-  @override 
-  State<CardWidget> createState () => _CardWidgetState();
+  @override
+  State<CardWidget> createState() => _CardWidgetState();
 }
 
 class _CardWidgetState extends State<CardWidget> {
   @override
   Widget build(BuildContext context) {
-   return GestureDetector(
+    return GestureDetector(
       onTap: () {
-        if(widget.onTap != null){
+        if (widget.onTap != null) {
           widget.onTap!(widget.card);
         }
       },
@@ -25,7 +25,7 @@ class _CardWidgetState extends State<CardWidget> {
         curve: Curves.fastOutSlowIn,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: (widget.card.isTapped) ? Colors.white : Colors.grey),
+            color: (widget.card.isTapped) ? Colors.white : Colors.grey),
         child: widget.card.isTapped ? Text(widget.card.val) : null,
       ),
     );
