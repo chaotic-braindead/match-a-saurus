@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/game.dart';
+import 'package:memory_game/widgets/leaderboard.dart';
 
 final List<String> difficultyList = <String>['Easy', 'Medium', 'Hard'];
 
@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                         }
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 15),
                     SizedBox(
                       width: 250,
                       height: 50,
@@ -216,7 +216,39 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
+                SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                          side: BorderSide (
+                            width: 5.0,
+                            color:Color.fromRGBO(36, 107, 34, 1)
+                          )
+                        ),
+                    child: const Text(
+                      "VIEW HIGH SCORES",
+                      style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'MadimiOne',
+                            color: Color.fromRGBO(36, 107, 34, 1),
+                            shadows: [
+                              Shadow( // Adjust offsets and blurRadius for stroke thickness
+                                offset: Offset(3.0, 3.0), // Adjust for stroke position
+                                blurRadius: 2.0,
+                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
+                              ),
+                            ],
+                            ),
+                      ),
+                    onPressed: () {
+                      // Redirect to leaderboard
+                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: -1)));
+                    },
+                  ),
+                ),
+                SizedBox(height: 15),
                 SizedBox(
                   width: 250,
                   height: 50,

@@ -68,7 +68,10 @@ class _LeaderboardState extends State<Leaderboard> {
           return;
         }
       }
-      setState(() => scores.add(PlayerWidget(player: currentPlayer!, color: Colors.blue))); 
+
+     if (widget.score > 0) {
+        setState(() => scores.add(PlayerWidget(player: currentPlayer!, color: Colors.blue)));
+      }
     });
   }
 
