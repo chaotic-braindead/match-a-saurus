@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memory_game/db/db.dart';
@@ -118,39 +120,180 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text("Memory Game")),
-        backgroundColor: Colors.blue,
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-              child: const Text("Play"),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => const Game())
-                );
-              }),
-              ElevatedButton(
-              child: const Text("Options"),
-              onPressed: () {
-                showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) => _buildPopupDialog(context),);
-              }),
-              ElevatedButton(
-                child: const Text("Exit"),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/dinos-compiled.png"),
+            fit: BoxFit.cover
+          )
+        ),
+        child: Center(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _homeTitle(),
+                SizedBox(
+                  width: 150,
+                  height: 50,
+                  child: ElevatedButton(
+                    child: const Text(
+                      "PLAY",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontFamily: 'MadimiOne',
+                        color: Color.fromRGBO(36, 107, 34, 1),
+                        ),
+                      ),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (context) => const Game())
+                      );
+                    }
+                  ),
+                ),
+                ElevatedButton(
+                child: const Text("Options"),
                 onPressed: () {
-                  _onWillPop();
-                },
-              )
-            ]
+                  showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) => _buildPopupDialog(context),);
+                }),
+                ElevatedButton(
+                  child: const Text("Exit"),
+                  onPressed: () {
+                    _onWillPop();
+                  },
+                )
+              ]
+          ),
         ),
       ),
     );
   }
+
+Stack _homeTitle() {
+    return Stack(
+  children: <Widget>[
+         Text(
+          'match a\nsaurus',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 70,
+            fontFamily: 'MadimiOne',
+            height: 1.0,
+            shadows: const [
+              Shadow( // Adjust offsets and blurRadius for stroke thickness
+                offset: Offset(13.0, 9.0), // Adjust for stroke position
+                blurRadius: 2.0,
+                color: Color.fromRGBO(255, 188, 152, 1), // Set your stroke color
+              ),
+            ],
+            
+          ),
+        ),
+        
+        Text(
+          'match a\nsaurus',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 72,
+            fontFamily: 'MadimiOne',
+            height: 1.0,
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 12
+              ..color = Color.fromRGBO(36, 107, 34, 1),
+             shadows: const [
+              Shadow( // Adjust offsets and blurRadius for stroke thickness
+                offset: Offset(0.0, 1.0), // Adjust for stroke position
+                blurRadius: 2.0,
+                color: Color.fromRGBO(36, 107, 34, 1), // Set your stroke color
+              ),
+            ],
+            
+          ),
+        ),
+
+        Text(
+          'match a\nsaurus',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 70,
+            fontFamily: 'MadimiOne',
+            height: 1.0,
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 12
+              ..color = Color.fromRGBO(36, 107, 34, 1),
+             shadows: const [
+              Shadow( // Adjust offsets and blurRadius for stroke thickness
+                offset: Offset(10.0, 1.0), // Adjust for stroke position
+                blurRadius: 2.0,
+                color: Color.fromRGBO(36, 107, 34, 1), // Set your stroke color
+              ),
+            ],
+            
+          ),
+        ),
+       
+        Text(
+          'match a\nsaurus',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 70,
+            fontFamily: 'MadimiOne',
+            height: 1.0,
+            color: const Color.fromARGB(255, 255, 255, 255),
+            
+          ),
+        ),
+      ],
+    );
+  }
 }
+
+
+//   Stack _homeTitle() {
+//     return Stack(
+//       children: const <Widget>[
+//         // Stroked text as border.
+//         Text(
+//           "match a\nsaurus",
+//           textAlign: TextAlign.center,
+//           style: TextStyle(
+//             fontSize: 70,
+//             fontFamily: 'MadimiOne',
+//             color: Color.fromRGBO(36, 107, 34, 1),
+//             height: 1.0,
+//             shadows: [
+//               Shadow( // Adjust offsets and blurRadius for stroke thickness
+//                 offset: Offset(5.0, 2.0), // Adjust for stroke position
+//                 blurRadius: 2.0,
+//                 color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
+//               ),
+//             ],
+//           ),
+//         ),
+//         // Solid text as fill.
+//         Text(
+//           "match a\nsaurus",
+//           textAlign: TextAlign.center,
+//           style: TextStyle(
+//             fontSize: 70,
+//             fontFamily: 'MadimiOne',
+//             color: Color.fromRGBO(36, 107, 34, 1),
+//             height: 1.0,
+//             shadows: [
+//               Shadow( // Adjust offsets and blurRadius for stroke thickness
+//                 offset: Offset(5.0, 2.0), // Adjust for stroke position
+//                 blurRadius: 2.0,
+//                 color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
+//               ),
+//             ],
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
