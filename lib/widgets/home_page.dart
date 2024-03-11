@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/game.dart';
@@ -122,6 +123,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
+          color: Color.fromRGBO(212, 253, 210, 1),
           image: DecorationImage(
             image: AssetImage("assets/dinos-compiled.png"),
             fit: BoxFit.cover
@@ -132,38 +134,118 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _homeTitle(),
-                SizedBox(
-                  width: 150,
-                  height: 50,
-                  child: ElevatedButton(
-                    child: const Text(
-                      "PLAY",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontFamily: 'MadimiOne',
-                        color: Color.fromRGBO(36, 107, 34, 1),
+                Column(
+                  children: [
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      width: 185,
+                      height: 140,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/logo-dino.png"),
+                            fit: BoxFit.cover
+                          )
                         ),
                       ),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (context) => const Game())
-                      );
-                    }
-                  ),
+                    ),
+                    SizedBox(
+                      width: 250,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          side: BorderSide (
+                            width: 5.0,
+                            color:Color.fromRGBO(36, 107, 34, 1)
+                          )
+                        ),
+                        child: const Text(
+                          "PLAY",
+                          style: TextStyle(
+                            fontSize: 29,
+                            fontFamily: 'MadimiOne',
+                            color: Color.fromRGBO(36, 107, 34, 1),
+                            shadows: [
+                              Shadow( // Adjust offsets and blurRadius for stroke thickness
+                                offset: Offset(3.0, 3.0), // Adjust for stroke position
+                                blurRadius: 2.0,
+                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
+                              ),
+                            ],
+                            ),
+                          ),
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context, MaterialPageRoute(builder: (context) => const Game())
+                          );
+                        }
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(
+                      width: 250,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          side: BorderSide (
+                            width: 5.0,
+                            color:Color.fromRGBO(36, 107, 34, 1)
+                          )
+                        ),
+                      child: const Text(
+                        "Options",
+                        style: TextStyle(
+                            fontSize: 29,
+                            fontFamily: 'MadimiOne',
+                            color: Color.fromRGBO(36, 107, 34, 1),
+                            shadows: [
+                              Shadow( // Adjust offsets and blurRadius for stroke thickness
+                                offset: Offset(3.0, 3.0), // Adjust for stroke position
+                                blurRadius: 2.0,
+                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
+                              ),
+                            ],
+                            ),
+                        ),
+                      onPressed: () {
+                        showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) => _buildPopupDialog(context),);
+                      }),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                child: const Text("Options"),
-                onPressed: () {
-                  showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) => _buildPopupDialog(context),);
-                }),
-                ElevatedButton(
-                  child: const Text("Exit"),
-                  onPressed: () {
-                    _onWillPop();
-                  },
+                SizedBox(height: 20),
+                SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                          side: BorderSide (
+                            width: 5.0,
+                            color:Color.fromRGBO(36, 107, 34, 1)
+                          )
+                        ),
+                    child: const Text(
+                      "Exit",
+                      style: TextStyle(
+                            fontSize: 29,
+                            fontFamily: 'MadimiOne',
+                            color: Color.fromRGBO(36, 107, 34, 1),
+                            shadows: [
+                              Shadow( // Adjust offsets and blurRadius for stroke thickness
+                                offset: Offset(3.0, 3.0), // Adjust for stroke position
+                                blurRadius: 2.0,
+                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
+                              ),
+                            ],
+                            ),
+                      ),
+                    onPressed: () {
+                      _onWillPop();
+                    },
+                  ),
                 )
               ]
           ),
