@@ -7,6 +7,25 @@ import 'package:memory_game/widgets/card_widget.dart';
 import 'package:memory_game/widgets/home_page.dart';
 import 'package:memory_game/widgets/leaderboard.dart';
 
+const shadows = [
+  Shadow(
+      // bottomLeft
+      offset: Offset(-1.5, -1.5),
+      color: Color.fromRGBO(117, 187, 115, 1)),
+  Shadow(
+      // bottomRight
+      offset: Offset(1.5, -1.5),
+      color: Color.fromRGBO(117, 187, 115, 1)),
+  Shadow(
+      // topRight
+      offset: Offset(1.5, 1.5),
+      color: Color.fromRGBO(117, 187, 115, 1)),
+  Shadow(
+      // topLeft
+      offset: Offset(-1.5, 1.5),
+      color: Color.fromRGBO(117, 187, 115, 1)),
+];
+
 class Game extends StatefulWidget {
   const Game({super.key});
   @override
@@ -22,14 +41,22 @@ class _GameState extends State<Game> {
   late int _rows;
   late int _cols;
   int _score = 0;
+  late int? _bestScore;
   late int _multiplier;
   bool _enableTaps = true;
+  late String? _difficulty;
 
   @override
   void initState() {
     super.initState();
-    String? difficulty = Database.optionsBox?.get("difficulty");
-    switch (difficulty) {
+    _difficulty = Database.optionsBox?.get("difficulty");
+    int? score = Database.playerBox?.get("personalBest")!.score;
+    if (score != null) {
+      _bestScore = score;
+    } else {
+      _bestScore = 0;
+    }
+    switch (_difficulty) {
       case "Easy":
         _multiplier = 1;
         _rows = 3;
@@ -67,16 +94,16 @@ class _GameState extends State<Game> {
 
   List<CardItem> _getRandomCards(int max) {
     Random rng = Random();
-    List<String> alpha = [];
+    List<String> dinos = [];
     List<CardItem> cards = [];
-    for (int i = 65; i <= 90; ++i) {
-      alpha.add(String.fromCharCode(i));
+    for (int i = 1; i <= 18; ++i) {
+      dinos.add("assets/cards/$i.png");
     }
     for (int i = 0; i < max / 2; ++i) {
-      int n = rng.nextInt(alpha.length);
-      cards.add(CardItem(val: alpha[n]));
-      cards.add(CardItem(val: alpha[n]));
-      alpha.removeAt(n);
+      int n = rng.nextInt(dinos.length);
+      cards.add(CardItem(val: dinos[n]));
+      cards.add(CardItem(val: dinos[n]));
+      dinos.removeAt(n);
     }
     return _shuffleCards(cards);
   }
@@ -122,6 +149,9 @@ class _GameState extends State<Game> {
         _validPairs.add(card);
         _tappedCard = null;
       });
+      if (_score > _bestScore!) {
+        _bestScore = _score;
+      }
     } else {
       setState(() => _enableTaps = false);
       Timer(const Duration(milliseconds: 500), () {
@@ -147,63 +177,301 @@ class _GameState extends State<Game> {
   }
 
   Widget _buildPopupDialog(BuildContext context) {
-    return AlertDialog(
-      title: const Center(child: Text('Paused')),
-      actions: <Widget>[
-        Center(
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-          ElevatedButton(
+    return Stack(children: [
+      AlertDialog(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        content: SizedBox(
+            width: 999,
+            child: Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/rectangle-bg.png"))),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          width: 200,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomePage()));
+                              },
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    width: 3.5,
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                // Change your radius here
+                                borderRadius: BorderRadius.circular(15),
+                              ))),
+                              child: const Text("back to main menu",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(36, 107, 34, 1),
+                                      fontFamily: "MadimiOne",
+                                      fontSize: 17,
+                                      shadows: [
+                                        Shadow(
+                                            // bottomLeft
+                                            offset: Offset(2.5, 3),
+                                            color: Color.fromRGBO(
+                                                255, 221, 83, 1)),
+                                      ])))),
+                      SizedBox(height: 25),
+                      SizedBox(
+                          width: 200,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Game()));
+                              },
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    width: 3.5,
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                // Change your radius here
+                                borderRadius: BorderRadius.circular(15),
+                              ))),
+                              child: const Text("restart game",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(36, 107, 34, 1),
+                                      fontFamily: "MadimiOne",
+                                      fontSize: 20,
+                                      shadows: [
+                                        Shadow(
+                                            // bottomLeft
+                                            offset: Offset(2.5, 3),
+                                            color: Color.fromRGBO(
+                                                255, 221, 83, 1)),
+                                      ]))))
+                    ]))),
+      ),
+      Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.fromLTRB(0, 275, 0, 0),
+          child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      const Color.fromRGBO(190, 255, 188, 1)),
+                  minimumSize: MaterialStateProperty.all(const Size(65, 65)),
+                  shape: MaterialStateProperty.all(const CircleBorder(
+                      side: BorderSide(
+                          width: 4, color: Color.fromRGBO(36, 107, 34, 1))))),
               onPressed: () {
                 _startTimer(_counter);
                 Navigator.of(context).pop();
               },
-              child: const Text("Play")),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const HomePage()));
-              },
-              child: const Text("Quit")),
-        ])),
-      ],
-    );
+              child: const Text(
+                "X",
+                style: TextStyle(
+                    color: Color.fromRGBO(36, 107, 34, 1),
+                    fontFamily: "MadimiOne",
+                    fontSize: 30,
+                    shadows: [
+                      Shadow(
+                          // bottomLeft
+                          offset: Offset(2.5, 3),
+                          color: Color.fromRGBO(255, 221, 83, 1)),
+                    ]),
+              ))),
+      Container(
+          margin: const EdgeInsets.fromLTRB(100, 165, 100, 0),
+          child: const DefaultTextStyle(
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: "MadimiOne",
+                height: 0.82,
+                fontSize: 50,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                      offset: Offset(4.5, 4.75),
+                      color: Color.fromRGBO(255, 188, 152, 1)),
+                  Shadow(
+                      // bottomLeft
+                      offset: Offset(-2.5, -2.5),
+                      color: Color.fromRGBO(29, 103, 27, 1)),
+                  Shadow(
+                      // bottomRight
+                      offset: Offset(2.5, -2.5),
+                      color: Color.fromRGBO(29, 103, 27, 1)),
+                  Shadow(
+                      // topRight
+                      offset: Offset(2.5, 2.5),
+                      color: Color.fromRGBO(29, 103, 27, 1)),
+                  Shadow(
+                      // topLeft
+                      offset: Offset(-2.5, 2.5),
+                      color: Color.fromRGBO(29, 103, 27, 1)),
+                ]),
+            //margin: const EdgeInsets.fromLTRB(100, 240, 100, 0),
+            child: Text("game paused"),
+          )),
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-            child: (_counter != 0)
-                ? Text("Time: ${_secondsToMinutes(_counter)} Score: $_score")
-                : const Text("Time's up!")),
-        backgroundColor: _counter != 0 ? Colors.blue : Colors.red,
+        toolbarHeight: 80,
+        titleSpacing: 20,
+        title: Image.asset(
+          "assets/logo-title.png",
+          width: 115,
+        ),
+        shape: const Border(
+            bottom:
+                BorderSide(color: Color.fromRGBO(69, 141, 67, 1), width: 6)),
+        elevation: 5,
+        shadowColor: const Color.fromRGBO(255, 185, 148, 1),
+        backgroundColor: const Color.fromRGBO(113, 220, 110, 1),
         actions: [
           IconButton(
-              icon: const Icon(Icons.pause),
-              onPressed: () {
-                _timer.cancel();
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) =>
-                        _buildPopupDialog(context));
-              })
+            onPressed: () {
+              _timer.cancel();
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) =>
+                      _buildPopupDialog(context));
+            },
+            icon: Image.asset(
+              "assets/pause-btn.png",
+            ),
+            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+          )
         ],
       ),
-      body: GridView.count(
-          padding: const EdgeInsets.all(20),
-          childAspectRatio: _rows == 6 ? 0.63 : 0.7,
-          crossAxisCount: _rows,
-          mainAxisSpacing: _rows == 6 ? 35.0 : 20.0,
-          crossAxisSpacing: _rows == 6 ? 10.0 : 20.0,
-          children: _cards
-              .map((card) => CardWidget(
-                    card: card,
-                    onTap: _enableTaps ? _handleTap : null,
-                  ))
-              .toList()),
+      body: Stack(children: [
+        Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/game-bg.png"), fit: BoxFit.fill)),
+        ),
+        // score container
+        Container(
+          width: 120,
+          height: 70,
+          margin: const EdgeInsets.fromLTRB(240, 45, 0, 0),
+          decoration: BoxDecoration(
+              border: Border.all(
+                  width: 3.5, color: const Color.fromRGBO(117, 187, 115, 1)),
+              boxShadow: const [
+                BoxShadow(
+                    offset: Offset(2.25, 2.25),
+                    color: Color.fromRGBO(255, 188, 153, 1)),
+              ],
+              color: const Color.fromRGBO(187, 237, 182, 1),
+              borderRadius: BorderRadius.circular(18)),
+          child: Center(
+              child: Text(
+            _score.toString(),
+            style: const TextStyle(
+                fontFamily: "MadimiOne",
+                fontSize: 35,
+                color: Colors.white,
+                shadows: shadows),
+          )),
+        ),
+        Container(
+            margin: const EdgeInsets.fromLTRB(262, 28, 0, 0),
+            child: const Text(
+              "SCORE:",
+              style: TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: 25,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                        // bottomLeft
+                        offset: Offset(-2.5, -2.5),
+                        color: Color.fromRGBO(117, 187, 115, 1)),
+                    Shadow(
+                        // bottomRight
+                        offset: Offset(2.5, -2.5),
+                        color: Color.fromRGBO(117, 187, 115, 1)),
+                    Shadow(
+                        // topRight
+                        offset: Offset(2.5, 2.5),
+                        color: Color.fromRGBO(117, 187, 115, 1)),
+                    Shadow(
+                        // topLeft
+                        offset: Offset(-2.5, 2.5),
+                        color: Color.fromRGBO(117, 187, 115, 1)),
+                  ]),
+            )),
+        // timer container
+        Container(
+            width: 130,
+            height: 40,
+            margin: const EdgeInsets.fromLTRB(25, 75, 0, 0),
+            decoration: BoxDecoration(
+                border:
+                    Border.all(color: const Color.fromRGBO(117, 187, 115, 1)),
+                color: const Color.fromRGBO(187, 237, 182, 1),
+                borderRadius: BorderRadius.circular(40)),
+            child: Center(
+                child: Text(
+              _secondsToMinutes(_counter),
+              style: const TextStyle(
+                  fontFamily: "MadimiOne",
+                  color: Colors.white,
+                  fontSize: 25,
+                  shadows: shadows),
+            ))),
+        Container(
+            margin: EdgeInsets.fromLTRB(27, 30, 0, 0),
+            child: Text(
+              "$_difficulty Level",
+              style: const TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: 20,
+                  color: Colors.white,
+                  shadows: shadows),
+            )),
+        Container(
+            margin: EdgeInsets.fromLTRB(27, 30, 0, 0),
+            child: Text(
+              "$_difficulty Level",
+              style: const TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: 20,
+                  color: Colors.white,
+                  shadows: shadows),
+            )),
+        Container(
+            margin: const EdgeInsets.fromLTRB(27, 55, 0, 0),
+            child: Text(
+              "Your high score: $_bestScore",
+              style: const TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: 12,
+                  color: Color.fromRGBO(117, 187, 115, 1)),
+            )),
+        GridView.count(
+            padding: const EdgeInsets.fromLTRB(20, 145, 20, 20),
+            childAspectRatio: _rows == 6 ? 0.63 : 0.93,
+            crossAxisCount: _rows,
+            mainAxisSpacing: _rows == 6 ? 35.0 : 5.0,
+            crossAxisSpacing: _rows == 6 ? 10.0 : 10.0,
+            children: _cards
+                .map((card) => CardWidget(
+                      card: card,
+                      onTap: _enableTaps ? _handleTap : null,
+                    ))
+                .toList())
+      ]),
     );
   }
 }

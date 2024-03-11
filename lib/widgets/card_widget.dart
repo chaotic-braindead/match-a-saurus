@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import "package:memory_game/models/card_item.dart";
 import 'package:flutter/material.dart';
 
@@ -21,12 +19,17 @@ class _CardWidgetState extends State<CardWidget> {
         }
       },
       child: AnimatedContainer(
+        clipBehavior: Clip.hardEdge,
         duration: const Duration(milliseconds: 200),
         curve: Curves.fastOutSlowIn,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: (widget.card.isTapped) ? Colors.white : Colors.grey),
-        child: widget.card.isTapped ? Text(widget.card.val) : null,
+            borderRadius: const BorderRadius.all(Radius.circular(23)),
+            image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage((widget.card.isTapped)
+                    ? widget.card.val
+                    : "assets/cards/face-down.png"))),
       ),
     );
   }

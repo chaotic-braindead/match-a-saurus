@@ -99,29 +99,98 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Memory Game"),
-        backgroundColor: Colors.blue,
-      ),
-      body: Center(
+        body: Container(
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/background.png"), fit: BoxFit.fill)),
+      child: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          ElevatedButton(
-              child: const Text("Play"),
-              onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const Game()));
-              }),
-          ElevatedButton(
-              child: const Text("Options"),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) => _buildPopupDialog(context),
-                );
-              }),
+          const SizedBox(height: 190),
+          SizedBox(
+              width: 260,
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => const Game()));
+                  },
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    side: const BorderSide(
+                        width: 3.5, color: Color.fromRGBO(36, 107, 34, 1)),
+                    // Change your radius here
+                    borderRadius: BorderRadius.circular(15),
+                  ))),
+                  child: const Text("PLAY",
+                      style: TextStyle(
+                          color: Color.fromRGBO(36, 107, 34, 1),
+                          fontFamily: "MadimiOne",
+                          fontSize: 35,
+                          shadows: [
+                            Shadow(
+                                // bottomLeft
+                                offset: Offset(2.5, 3),
+                                color: Color.fromRGBO(255, 221, 83, 1)),
+                          ])))),
+          const SizedBox(height: 10),
+          SizedBox(
+              width: 260,
+              height: 50,
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => const Game()));
+                  },
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    side: const BorderSide(
+                        width: 3.5, color: Color.fromRGBO(36, 107, 34, 1)),
+                    // Change your radius here
+                    borderRadius: BorderRadius.circular(15),
+                  ))),
+                  child: const Text("VIEW HIGH SCORES",
+                      style: TextStyle(
+                          color: Color.fromRGBO(36, 107, 34, 1),
+                          fontFamily: "MadimiOne",
+                          fontSize: 25,
+                          shadows: [
+                            Shadow(
+                                // bottomLeft
+                                offset: Offset(2.5, 3),
+                                color: Color.fromRGBO(255, 221, 83, 1)),
+                          ])))),
+          const SizedBox(height: 10),
+          SizedBox(
+              width: 260,
+              height: 50,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    side: const BorderSide(
+                        width: 3.5, color: Color.fromRGBO(36, 107, 34, 1)),
+                    // Change your radius here
+                    borderRadius: BorderRadius.circular(15),
+                  ))),
+                  child: const Text("OPTIONS",
+                      style: TextStyle(
+                          color: Color.fromRGBO(36, 107, 34, 1),
+                          fontFamily: "MadimiOne",
+                          fontSize: 28,
+                          shadows: [
+                            Shadow(
+                                // bottomLeft
+                                offset: Offset(2.5, 3),
+                                color: Color.fromRGBO(255, 221, 83, 1)),
+                          ])),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) =>
+                          _buildPopupDialog(context),
+                    );
+                  })),
         ]),
       ),
-    );
+    ));
   }
 }
