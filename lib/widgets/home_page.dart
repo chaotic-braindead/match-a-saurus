@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           color: Color.fromRGBO(212, 253, 210, 1),
           image: DecorationImage(
-            image: AssetImage("assets/dinos-compiled.png"),
+            image: AssetImage("assets/bg-2.png"),
             fit: BoxFit.cover
           )
         ),
