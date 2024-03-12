@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/card_item.dart';
 import 'package:memory_game/widgets/card_widget.dart';
+import 'package:memory_game/widgets/home_page.dart';
+import 'package:memory_game/widgets/leaderboard.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -12,21 +14,50 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> { 
-  late List<CardItem> cards;
-  late List<CardItem> validPairs;
-  late CardItem? tappedCard;
-  late int counter;
-  late Timer timer;
-  late int score;
+  late List<CardItem> _cards;
+  late List<CardItem> _validPairs;
+  late CardItem? _tappedCard;
+  late int _counter;
+  late Timer _timer;
+  late int _rows;
+  late int _cols;
+  int _score = 0;
+  late int _multiplier; 
+  bool _enableTaps = true;
   
   @override
   void initState(){
     super.initState();
-    cards = _getRandomCards(12);
-    tappedCard = null;
-    validPairs = [];
-    startTimer();
-    score = 0;
+    String? difficulty = Database.optionsBox?.get("difficulty");
+    switch(difficulty){
+      case "Easy": 
+        setState(() {
+          _multiplier = 1;
+          _rows = 3;
+          _cols = 4;
+        }); 
+        break;
+      case "Medium":
+         setState(() {
+          _multiplier = 2;
+          _rows = 4;
+          _cols = 5;
+        }); 
+        break;
+      case "Hard":
+       setState(() {
+          _multiplier = 3;
+          _rows = 6;
+          _cols = 6;
+        }); 
+        break;
+      default:
+        throw Exception("Must not be reached");
+    }
+    _cards = _getRandomCards(_rows*_cols);
+    _tappedCard = null;
+    _validPairs = [];
+    _startTimer(60);
   }
 
   List<CardItem> _shuffleCards(List<CardItem> cards) {
@@ -62,62 +93,106 @@ class _GameState extends State<Game> {
     }
   }
 
-  void startTimer(){
-    counter = 60;
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if(counter > 0){
+  void _startTimer(int time){
+    _counter = time;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if(_counter > 0){
         setState(() {
-          counter--;
+         --_counter;
         });
       } else {
         timer.cancel();
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
       }
     });
   }
 
   void _handleTap(CardItem card){
-    if(counter == 0){
+    if(_counter == 0){
       return;
     }
     card.isTapped = true;
-    setState(() {
-      tappedCard ??= card;
-      if(tappedCard == card){
-        return;
-      }
-      if(tappedCard?.val == card.val){
-        ++score;
-        validPairs.add(tappedCard!);
-        validPairs.add(card);
-        tappedCard = null;
-      }
-      else{
-        Timer(const Duration(milliseconds: 200), () {
-            tappedCard?.isTapped = false;
-            card.isTapped = false;
-            tappedCard = null;
-          });
-      }
-    });
-    if(validPairs.length == cards.length){
-      timer.cancel();
+    setState(() => _tappedCard ??= card);
+    if(_tappedCard == card){
+      return;
+    }
+    if(_tappedCard?.val == card.val){
+      setState(() {
+        _score += _counter;
+        _score *= _multiplier;
+        _validPairs.add(_tappedCard!);
+        _validPairs.add(card);
+        _tappedCard = null;
+      });
+    }
+    else{
+      setState(() => _enableTaps = false);
+      Timer(const Duration(milliseconds: 500), () {
+          _tappedCard?.isTapped = false;
+          card.isTapped = false;
+          _tappedCard = null;
+          setState(() => _enableTaps = true);
+        });
+    }
+    if(_validPairs.length == _cards.length){
+      _timer.cancel();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
     }
   }
+
+  String _secondsToMinutes(int s){
+    int minutes = (s / 60).truncate();
+    int seconds = (s % 60);
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  Widget _buildPopupDialog(BuildContext context) {
+  return AlertDialog(
+    title: const Center(child: Text('Paused')),
+    actions: <Widget>[
+      Center(child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [ElevatedButton(
+          onPressed: () {
+            _startTimer(_counter);
+            Navigator.of(context).pop();
+          },
+          child: const Text("Play")),
+          ElevatedButton(
+          onPressed: () {
+           Navigator.pop(context);
+           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+          },
+          child: const Text("Quit")),
+        ])),
+    ],
+  );
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: counter != 0 ? Text("Time: $counter Score: $score") : const Text("Time's up!"),
-        backgroundColor: counter != 0 ? Colors.blue : Colors.red,
+        title: Center(child: (_counter != 0) ? Text("Time: ${_secondsToMinutes(_counter)} Score: $_score") : const Text("Time's up!")),
+        backgroundColor: _counter != 0 ? Colors.blue : Colors.red,
+        actions: [IconButton(icon: const Icon(Icons.pause), onPressed: () { 
+              _timer.cancel();
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) => _buildPopupDialog(context)
+              );
+            }) 
+          ],
         ),
       body: GridView.count(
         padding: const EdgeInsets.all(20),
-        crossAxisCount: 3,
-        mainAxisSpacing: 20.0,
-        crossAxisSpacing: 20.0,
-        children: cards.map((card) => CardWidget(
+        childAspectRatio: _rows == 6 ? 0.63 : 0.7,
+        crossAxisCount: _rows,
+        mainAxisSpacing: _rows == 6 ? 35.0 : 20.0,
+        crossAxisSpacing: _rows == 6? 10.0 : 20.0,
+        children: _cards.map((card) => CardWidget(
           card: card,
-          onTap: _handleTap,
+          onTap: _enableTaps ? _handleTap : null,
           )).toList()
         ),
     );
