@@ -128,7 +128,8 @@ class _GameState extends State<Game> {
         showDialog(
             context: context,
             barrierDismissible: false,
-            builder: (BuildContext context) => _buildGameOverDialog(context));
+            builder: (BuildContext context) =>
+                _buildGameOverDialog(context, "timer ran out!"));
       }
     });
   }
@@ -166,8 +167,13 @@ class _GameState extends State<Game> {
     }
     if (_validPairs.length == _cards.length) {
       _timer.cancel();
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) =>
+              _buildGameOverDialog(context, "you win!"));
+      //Navigator.pushReplacement(context,
+      //  MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
     }
   }
 
@@ -328,7 +334,7 @@ class _GameState extends State<Game> {
     ]);
   }
 
-  Widget _buildGameOverDialog(BuildContext context) {
+  Widget _buildGameOverDialog(BuildContext context, String msg) {
     return Stack(children: [
       AlertDialog(
         backgroundColor: Colors.transparent,
@@ -392,7 +398,7 @@ class _GameState extends State<Game> {
                                 borderRadius: BorderRadius.circular(15),
                               ))),
                               child: FittedBox(
-                                  child: Text("TRY AGAIN!",
+                                  child: Text("PLAY AGAIN!",
                                       style: TextStyle(
                                           color: const Color.fromRGBO(
                                               36, 107, 34, 1),
@@ -505,7 +511,7 @@ class _GameState extends State<Game> {
                       offset: Offset(-3.5, 3.5),
                       color: Color.fromRGBO(29, 103, 27, 1)),
                 ]),
-            child: const Text("timer ran out!"),
+            child: Text(msg),
           )),
     ]);
   }
