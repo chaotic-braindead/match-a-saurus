@@ -136,7 +136,6 @@ class _HomePageState extends State<HomePage> {
                 _homeTitle(),
                 Column(
                   children: [
-                    SizedBox(height: 20,),
                     SizedBox(
                       width: 185,
                       height: 140,
@@ -193,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                           )
                         ),
                       child: const Text(
-                        "Options",
+                        "OPTIONS",
                         style: TextStyle(
                             fontSize: 29,
                             fontFamily: 'MadimiOne',
@@ -260,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                           )
                         ),
                     child: const Text(
-                      "Exit",
+                      "EXIT",
                       style: TextStyle(
                             fontSize: 29,
                             fontFamily: 'MadimiOne',
@@ -286,128 +285,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-Stack _homeTitle() {
-    return Stack(
-  children: <Widget>[
-         Text(
-          'match a\nsaurus',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 70,
-            fontFamily: 'MadimiOne',
-            height: 1.0,
-            shadows: const [
-              Shadow( // Adjust offsets and blurRadius for stroke thickness
-                offset: Offset(13.0, 9.0), // Adjust for stroke position
-                blurRadius: 2.0,
-                color: Color.fromRGBO(255, 188, 152, 1), // Set your stroke color
-              ),
-            ],
-            
+SizedBox _homeTitle() {
+    return SizedBox(
+        width: 300,
+        height: 175,
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/logo-title.png"),
+              fit: BoxFit.cover
+            )
           ),
         ),
-        
-        Text(
-          'match a\nsaurus',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 72,
-            fontFamily: 'MadimiOne',
-            height: 1.0,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 12
-              ..color = Color.fromRGBO(36, 107, 34, 1),
-             shadows: const [
-              Shadow( // Adjust offsets and blurRadius for stroke thickness
-                offset: Offset(0.0, 1.0), // Adjust for stroke position
-                blurRadius: 2.0,
-                color: Color.fromRGBO(36, 107, 34, 1), // Set your stroke color
-              ),
-            ],
-            
-          ),
-        ),
-
-        Text(
-          'match a\nsaurus',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 70,
-            fontFamily: 'MadimiOne',
-            height: 1.0,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 12
-              ..color = Color.fromRGBO(36, 107, 34, 1),
-             shadows: const [
-              Shadow( // Adjust offsets and blurRadius for stroke thickness
-                offset: Offset(10.0, 1.0), // Adjust for stroke position
-                blurRadius: 2.0,
-                color: Color.fromRGBO(36, 107, 34, 1), // Set your stroke color
-              ),
-            ],
-            
-          ),
-        ),
-       
-        Text(
-          'match a\nsaurus',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 70,
-            fontFamily: 'MadimiOne',
-            height: 1.0,
-            color: const Color.fromARGB(255, 255, 255, 255),
-            
-          ),
-        ),
-      ],
-    );
+      );
   }
 }
-
-
-//   Stack _homeTitle() {
-//     return Stack(
-//       children: const <Widget>[
-//         // Stroked text as border.
-//         Text(
-//           "match a\nsaurus",
-//           textAlign: TextAlign.center,
-//           style: TextStyle(
-//             fontSize: 70,
-//             fontFamily: 'MadimiOne',
-//             color: Color.fromRGBO(36, 107, 34, 1),
-//             height: 1.0,
-//             shadows: [
-//               Shadow( // Adjust offsets and blurRadius for stroke thickness
-//                 offset: Offset(5.0, 2.0), // Adjust for stroke position
-//                 blurRadius: 2.0,
-//                 color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
-//               ),
-//             ],
-//           ),
-//         ),
-//         // Solid text as fill.
-//         Text(
-//           "match a\nsaurus",
-//           textAlign: TextAlign.center,
-//           style: TextStyle(
-//             fontSize: 70,
-//             fontFamily: 'MadimiOne',
-//             color: Color.fromRGBO(36, 107, 34, 1),
-//             height: 1.0,
-//             shadows: [
-//               Shadow( // Adjust offsets and blurRadius for stroke thickness
-//                 offset: Offset(5.0, 2.0), // Adjust for stroke position
-//                 blurRadius: 2.0,
-//                 color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
-//               ),
-//             ],
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
