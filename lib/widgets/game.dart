@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/card_item.dart';
+import 'package:memory_game/utils/size_config.dart';
 import 'package:memory_game/widgets/card_widget.dart';
 import 'package:memory_game/widgets/home_page.dart';
 import 'package:memory_game/widgets/leaderboard.dart';
@@ -50,7 +51,7 @@ class _GameState extends State<Game> {
   void initState() {
     super.initState();
     _difficulty = Database.optionsBox?.get("difficulty");
-    int? score = Database.playerBox?.get("personalBest")!.score;
+    int? score = Database.playerBox?.get("personalBest")?.score;
     if (score != null) {
       _bestScore = score;
     } else {
@@ -124,16 +125,16 @@ class _GameState extends State<Game> {
         });
       } else {
         timer.cancel();
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Leaderboard(score: _score)));
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) => _buildGameOverDialog(context));
       }
     });
   }
 
   void _handleTap(CardItem card) {
-    if (_counter == 0) {
+    if (_counter == 0 || card.isTapped) {
       return;
     }
     card.isTapped = true;
@@ -176,7 +177,7 @@ class _GameState extends State<Game> {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  Widget _buildPopupDialog(BuildContext context) {
+  Widget _buildPauseDialog(BuildContext context) {
     return Stack(children: [
       AlertDialog(
         backgroundColor: Colors.transparent,
@@ -191,7 +192,7 @@ class _GameState extends State<Game> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                          width: 200,
+                          width: SizeConfig.safeBlockHorizontal * 50,
                           child: ElevatedButton(
                               onPressed: () {
                                 Navigator.pop(context);
@@ -210,21 +211,23 @@ class _GameState extends State<Game> {
                                 // Change your radius here
                                 borderRadius: BorderRadius.circular(15),
                               ))),
-                              child: const Text("back to main menu",
-                                  style: TextStyle(
-                                      color: Color.fromRGBO(36, 107, 34, 1),
-                                      fontFamily: "MadimiOne",
-                                      fontSize: 17,
-                                      shadows: [
-                                        Shadow(
-                                            // bottomLeft
-                                            offset: Offset(2.5, 3),
-                                            color: Color.fromRGBO(
-                                                255, 221, 83, 1)),
-                                      ])))),
-                      SizedBox(height: 25),
+                              child: FittedBox(
+                                  child: Text("back to main menu",
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(
+                                              36, 107, 34, 1),
+                                          fontFamily: "MadimiOne",
+                                          fontSize: 3 * SizeConfig.fontSize,
+                                          shadows: const [
+                                            Shadow(
+                                                // bottomLeft
+                                                offset: Offset(2.5, 3),
+                                                color: Color.fromRGBO(
+                                                    255, 221, 83, 1)),
+                                          ]))))),
+                      SizedBox(height: SizeConfig.blockSizeVertical),
                       SizedBox(
-                          width: 200,
+                          width: SizeConfig.safeBlockHorizontal * 50,
                           child: ElevatedButton(
                               onPressed: () {
                                 Navigator.pop(context);
@@ -242,18 +245,20 @@ class _GameState extends State<Game> {
                                 // Change your radius here
                                 borderRadius: BorderRadius.circular(15),
                               ))),
-                              child: const Text("restart game",
-                                  style: TextStyle(
-                                      color: Color.fromRGBO(36, 107, 34, 1),
-                                      fontFamily: "MadimiOne",
-                                      fontSize: 20,
-                                      shadows: [
-                                        Shadow(
-                                            // bottomLeft
-                                            offset: Offset(2.5, 3),
-                                            color: Color.fromRGBO(
-                                                255, 221, 83, 1)),
-                                      ]))))
+                              child: FittedBox(
+                                  child: Text("restart game",
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(
+                                              36, 107, 34, 1),
+                                          fontFamily: "MadimiOne",
+                                          fontSize: SizeConfig.fontSize * 3,
+                                          shadows: const [
+                                            Shadow(
+                                                // bottomLeft
+                                                offset: Offset(2.5, 2),
+                                                color: Color.fromRGBO(
+                                                    255, 221, 83, 1)),
+                                          ])))))
                     ]))),
       ),
       Container(
@@ -271,13 +276,13 @@ class _GameState extends State<Game> {
                 _startTimer(_counter);
                 Navigator.of(context).pop();
               },
-              child: const Text(
+              child: Text(
                 "X",
                 style: TextStyle(
-                    color: Color.fromRGBO(36, 107, 34, 1),
+                    color: const Color.fromRGBO(36, 107, 34, 1),
                     fontFamily: "MadimiOne",
-                    fontSize: 30,
-                    shadows: [
+                    fontSize: 3.5 * SizeConfig.fontSize,
+                    shadows: const [
                       Shadow(
                           // bottomLeft
                           offset: Offset(2.5, 3),
@@ -285,15 +290,19 @@ class _GameState extends State<Game> {
                     ]),
               ))),
       Container(
-          margin: const EdgeInsets.fromLTRB(100, 165, 100, 0),
-          child: const DefaultTextStyle(
+          margin: EdgeInsets.fromLTRB(
+              SizeConfig.safeBlockHorizontal * 20,
+              SizeConfig.safeBlockVertical * 22,
+              SizeConfig.safeBlockHorizontal * 20,
+              0),
+          child: DefaultTextStyle(
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: "MadimiOne",
                 height: 0.82,
-                fontSize: 50,
+                fontSize: 6.5 * SizeConfig.fontSize,
                 color: Colors.white,
-                shadows: [
+                shadows: const [
                   Shadow(
                       offset: Offset(4.5, 4.75),
                       color: Color.fromRGBO(255, 188, 152, 1)),
@@ -314,8 +323,189 @@ class _GameState extends State<Game> {
                       offset: Offset(-2.5, 2.5),
                       color: Color.fromRGBO(29, 103, 27, 1)),
                 ]),
-            //margin: const EdgeInsets.fromLTRB(100, 240, 100, 0),
-            child: Text("game paused"),
+            child: const Text("game paused"),
+          )),
+    ]);
+  }
+
+  Widget _buildGameOverDialog(BuildContext context) {
+    return Stack(children: [
+      AlertDialog(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        content: SizedBox(
+            width: 999,
+            child: Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/rectangle-bg.png"))),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("score:",
+                          style: TextStyle(
+                              color: const Color.fromRGBO(36, 107, 34, 1),
+                              fontFamily: "MadimiOne",
+                              fontSize: 3.5 * SizeConfig.fontSize,
+                              shadows: const [
+                                Shadow(
+                                    offset: Offset(1.5, 2),
+                                    color: Color.fromRGBO(255, 221, 83, 1)),
+                              ])),
+                      Text("$_score",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "MadimiOne",
+                              fontSize: 6 * SizeConfig.fontSize,
+                              shadows: const [
+                                Shadow(
+                                    offset: Offset(-2.5, 2.5),
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                Shadow(
+                                    offset: Offset(2.5, -2.5),
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                Shadow(
+                                    offset: Offset(-2.5, -2.5),
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                Shadow(
+                                    offset: Offset(2.5, 2.5),
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                              ])),
+                      // const SizedBox(height: 20),
+                      SizedBox(
+                          width: SizeConfig.safeBlockHorizontal * 50,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Game()));
+                              },
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    width: 3.5,
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                // Change your radius here
+                                borderRadius: BorderRadius.circular(15),
+                              ))),
+                              child: FittedBox(
+                                  child: Text("TRY AGAIN!",
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(
+                                              36, 107, 34, 1),
+                                          fontFamily: "MadimiOne",
+                                          fontSize: 3 * SizeConfig.fontSize,
+                                          shadows: const [
+                                            Shadow(
+                                                // bottomLeft
+                                                offset: Offset(2.5, 3),
+                                                color: Color.fromRGBO(
+                                                    255, 221, 83, 1)),
+                                          ]))))),
+                      SizedBox(height: SizeConfig.blockSizeVertical),
+                      SizedBox(
+                          width: SizeConfig.safeBlockHorizontal * 50,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Leaderboard(score: _score)));
+                              },
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    width: 3.5,
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                // Change your radius here
+                                borderRadius: BorderRadius.circular(15),
+                              ))),
+                              child: FittedBox(
+                                  child: Text("VIEW LEADERBOARD",
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(
+                                              36, 107, 34, 1),
+                                          fontFamily: "MadimiOne",
+                                          fontSize: SizeConfig.fontSize * 3,
+                                          shadows: const [
+                                            Shadow(
+                                                // bottomLeft
+                                                offset: Offset(2.5, 2),
+                                                color: Color.fromRGBO(
+                                                    255, 221, 83, 1)),
+                                          ])))))
+                    ]))),
+      ),
+      Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.fromLTRB(0, 295, 0, 0),
+          child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      const Color.fromRGBO(190, 255, 188, 1)),
+                  minimumSize: MaterialStateProperty.all(const Size(65, 65)),
+                  shape: MaterialStateProperty.all(const CircleBorder(
+                      side: BorderSide(
+                          width: 4, color: Color.fromRGBO(36, 107, 34, 1))))),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const HomePage()));
+              },
+              child: Text(
+                "X",
+                style: TextStyle(
+                    color: const Color.fromRGBO(36, 107, 34, 1),
+                    fontFamily: "MadimiOne",
+                    fontSize: 3.25 * SizeConfig.fontSize,
+                    shadows: const [
+                      Shadow(
+                          // bottomLeft
+                          offset: Offset(2.5, 3),
+                          color: Color.fromRGBO(255, 221, 83, 1)),
+                    ]),
+              ))),
+      Container(
+          margin: EdgeInsets.fromLTRB(
+              SizeConfig.safeBlockHorizontal * 25,
+              SizeConfig.safeBlockVertical * 24.25,
+              SizeConfig.safeBlockHorizontal * 25,
+              0),
+          child: DefaultTextStyle(
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: "MadimiOne",
+                height: 0.65,
+                fontSize: 6.15 * SizeConfig.fontSize,
+                color: Colors.white,
+                shadows: const [
+                  Shadow(
+                      offset: Offset(5.75, 6.25),
+                      color: Color.fromRGBO(255, 188, 152, 1)),
+                  Shadow(
+                      // bottomLeft
+                      offset: Offset(-3.5, -3.5),
+                      color: Color.fromRGBO(29, 103, 27, 1)),
+                  Shadow(
+                      // bottomRight
+                      offset: Offset(3.5, -3.5),
+                      color: Color.fromRGBO(29, 103, 27, 1)),
+                  Shadow(
+                      // topRight
+                      offset: Offset(3.5, 3.5),
+                      color: Color.fromRGBO(29, 103, 27, 1)),
+                  Shadow(
+                      // topLeft
+                      offset: Offset(-3.5, 3.5),
+                      color: Color.fromRGBO(29, 103, 27, 1)),
+                ]),
+            child: const Text("timer ran out!"),
           )),
     ]);
   }
@@ -344,7 +534,7 @@ class _GameState extends State<Game> {
                   context: context,
                   barrierDismissible: false,
                   builder: (BuildContext context) =>
-                      _buildPopupDialog(context));
+                      _buildPauseDialog(context));
             },
             icon: Image.asset(
               "assets/pause-btn.png",
@@ -363,7 +553,8 @@ class _GameState extends State<Game> {
         Container(
           width: 120,
           height: 70,
-          margin: const EdgeInsets.fromLTRB(240, 45, 0, 0),
+          margin: EdgeInsets.fromLTRB(
+              SizeConfig.blockSizeHorizontal * 65, 45, 0, 0),
           decoration: BoxDecoration(
               border: Border.all(
                   width: 3.5, color: const Color.fromRGBO(117, 187, 115, 1)),
@@ -385,7 +576,8 @@ class _GameState extends State<Game> {
           )),
         ),
         Container(
-            margin: const EdgeInsets.fromLTRB(262, 28, 0, 0),
+            margin: EdgeInsets.fromLTRB(
+                SizeConfig.blockSizeHorizontal * 70, 28, 0, 0),
             child: const Text(
               "SCORE:",
               style: TextStyle(
@@ -431,7 +623,7 @@ class _GameState extends State<Game> {
                   shadows: shadows),
             ))),
         Container(
-            margin: EdgeInsets.fromLTRB(27, 30, 0, 0),
+            margin: const EdgeInsets.fromLTRB(27, 30, 0, 0),
             child: Text(
               "$_difficulty Level",
               style: const TextStyle(
@@ -441,7 +633,7 @@ class _GameState extends State<Game> {
                   shadows: shadows),
             )),
         Container(
-            margin: EdgeInsets.fromLTRB(27, 30, 0, 0),
+            margin: const EdgeInsets.fromLTRB(27, 30, 0, 0),
             child: Text(
               "$_difficulty Level",
               style: const TextStyle(
@@ -461,9 +653,9 @@ class _GameState extends State<Game> {
             )),
         GridView.count(
             padding: const EdgeInsets.fromLTRB(20, 145, 20, 20),
-            childAspectRatio: _rows == 6 ? 0.63 : 0.93,
+            childAspectRatio: _rows == 6 ? 0.8 : 0.93,
             crossAxisCount: _rows,
-            mainAxisSpacing: _rows == 6 ? 35.0 : 5.0,
+            mainAxisSpacing: _rows == 6 ? 20.0 : 5.0,
             crossAxisSpacing: _rows == 6 ? 10.0 : 10.0,
             children: _cards
                 .map((card) => CardWidget(
