@@ -1,6 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/card_item.dart';
 import 'package:memory_game/widgets/card_widget.dart';
@@ -146,28 +149,156 @@ class _GameState extends State<Game> {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  Widget _buildPopupDialog(BuildContext context) {
-  return AlertDialog(
-    title: const Center(child: Text('Paused')),
-    actions: <Widget>[
-      Center(child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [ElevatedButton(
-          onPressed: () {
-            _startTimer(_counter);
-            Navigator.of(context).pop();
-          },
-          child: const Text("Play")),
-          ElevatedButton(
-          onPressed: () {
-           Navigator.pop(context);
-           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
-          },
-          child: const Text("Quit")),
-        ])),
-    ],
+Dialog _buildPopupDialog(BuildContext context) {
+  return Dialog(
+    backgroundColor: Colors.transparent,
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          height: 320,
+          width: 350,
+          padding: EdgeInsets.all(0),
+          margin: EdgeInsets.all(0),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/game-paused-bg.png"),
+              fit: BoxFit.cover
+            )
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 250,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide (
+                      width: 5.0,
+                      color:Color.fromRGBO(36, 107, 34, 1)
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0)
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                  }, 
+                  child: const Text(
+                    "back to main menu",
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontFamily: 'MadimiOne',
+                        color: Color.fromRGBO(36, 107, 34, 1),
+                        shadows: [
+                          Shadow( 
+                            offset: Offset(3.0, 3.0), 
+                            blurRadius: 2.0,
+                            color: Color.fromRGBO(255, 220, 80, 1),
+                          ),
+                        ],
+                      ),
+                    ),
+                ),
+              ),
+              SizedBox(height: 20,),
+              SizedBox(
+                width: 250,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide (
+                      width: 5.0,
+                      color:Color.fromRGBO(36, 107, 34, 1)
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0)
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (context) => const Game())
+                    );
+                  }, 
+                  child: const Text(
+                    "restart game",
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontFamily: 'MadimiOne',
+                        color: Color.fromRGBO(36, 107, 34, 1),
+                        shadows: [
+                          Shadow( 
+                            offset: Offset(3.0, 3.0), 
+                            blurRadius: 2.0,
+                            color: Color.fromRGBO(255, 220, 80, 1), 
+                          ),
+                        ],
+                      ),
+                    ),
+                ),
+              ),
+              SizedBox(height: 10,)
+            ],
+          ),
+       ),
+       Positioned(
+        top: -90,
+        left: 45,
+        child: SizedBox(
+          width: 250,
+          height: 200,
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/game-paused-text.png")
+              )
+            ),
+          ),
+        )
+       ),
+       Positioned(
+        bottom: 14,
+        left: 130,
+        child: SizedBox(
+          height: 70,
+          width: 70,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 0.0,
+                backgroundColor: Colors.transparent
+              ),
+              onPressed: () {
+                _startTimer(_counter);
+                Navigator.of(context).pop();
+              }, 
+              child: const Text(
+                "X",
+                textAlign: TextAlign.center, 
+                style: TextStyle(
+                    fontSize: 38,
+                    fontFamily: 'MadimiOne',
+                    color: Color.fromRGBO(36, 107, 34, 1),
+                    shadows: [
+                      Shadow( // Adjust offsets and blurRadius for stroke thickness
+                        offset: Offset(3.0, 3.0),
+                        color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
+                      ),
+                    ],
+                  ),
+                ),
+            ),
+          ),
+       ),
+       
+      ],
+    )
   );
 }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
