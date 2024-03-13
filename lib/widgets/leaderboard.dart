@@ -17,6 +17,7 @@ class _LeaderboardState extends State<Leaderboard> {
   late List<PlayerWidget> _scores;
   late Player? _currentPlayer;
   late Player? _pb;
+  late bool _isLoading;
   @override
   void setState(fn) {
     if (mounted) {
@@ -27,6 +28,7 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   void initState() {
     super.initState();
+    _isLoading = true;
     _currentPlayer = Database.playerBox
         ?.get("currentPlayer", defaultValue: Player(name: "Guest"));
     _currentPlayer?.score = widget.score;
@@ -87,9 +89,12 @@ class _LeaderboardState extends State<Leaderboard> {
           return;
         }
       }
-      setState(() => _scores.add(PlayerWidget(
-          player: _currentPlayer!,
-          color: const Color.fromRGBO(255, 188, 152, 1))));
+      setState(() {
+        _scores.add(PlayerWidget(
+            player: _currentPlayer!,
+            color: const Color.fromRGBO(255, 188, 152, 1)));
+        _isLoading = false;
+      });
     });
   }
 
@@ -120,30 +125,34 @@ class _LeaderboardState extends State<Leaderboard> {
                           image: DecorationImage(
                               image: AssetImage("assets/rectangle-bg.png"),
                               fit: BoxFit.fill)),
-                      child: ListView(
-                          padding: EdgeInsets.fromLTRB(
-                              SizeConfig.blockSizeHorizontal * 6.25,
-                              SizeConfig.blockSizeVertical * 6,
-                              SizeConfig.blockSizeHorizontal * 7.5,
-                              0),
-                          children: [
-                            Column(children: _scores),
-                            Row(children: [
-                              Text("Personal Best",
-                                  style: TextStyle(
-                                      fontSize: SizeConfig.fontSize * 2.35,
-                                      fontFamily: "MadimiOne",
-                                      color: const Color.fromRGBO(
-                                          69, 141, 67, 1))),
-                              const Spacer(),
-                              Text((_pb?.score!).toString(),
-                                  style: TextStyle(
-                                      fontSize: SizeConfig.fontSize * 2.35,
-                                      fontFamily: "MadimiOne",
-                                      color: const Color.fromRGBO(
-                                          147, 123, 107, 1)))
-                            ])
-                          ]))),
+                      child: _isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : ListView(
+                              padding: EdgeInsets.fromLTRB(
+                                  SizeConfig.blockSizeHorizontal * 6.25,
+                                  SizeConfig.blockSizeVertical * 6,
+                                  SizeConfig.blockSizeHorizontal * 7.5,
+                                  0),
+                              children: [
+                                  Column(children: _scores),
+                                  Row(children: [
+                                    Text("Personal Best",
+                                        style: TextStyle(
+                                            fontSize:
+                                                SizeConfig.fontSize * 2.35,
+                                            fontFamily: "MadimiOne",
+                                            color: const Color.fromRGBO(
+                                                69, 141, 67, 1))),
+                                    const Spacer(),
+                                    Text((_pb?.score!).toString(),
+                                        style: TextStyle(
+                                            fontSize:
+                                                SizeConfig.fontSize * 2.35,
+                                            fontFamily: "MadimiOne",
+                                            color: const Color.fromRGBO(
+                                                147, 123, 107, 1)))
+                                  ])
+                                ]))),
             ),
             Container(
                 alignment: Alignment.center,

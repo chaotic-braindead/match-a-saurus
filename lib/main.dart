@@ -26,7 +26,8 @@ class MemoryGame extends StatelessWidget {
     return MaterialApp(
       title: 'Memory Game',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromRGBO(29, 103, 27, 1)),
         useMaterial3: true,
       ),
       home: const HomePage(),
