@@ -27,6 +27,9 @@ class _GameState extends State<Game> {
   int _score = 0;
   late int _multiplier; 
   bool _enableTaps = true;
+
+  late double deviceWidth;
+  late double deviceHeight;
   
   @override
   void initState(){
@@ -74,19 +77,7 @@ class _GameState extends State<Game> {
     return cards;
   }
   List<CardItem> _getRandomCards(int max) {
-    Random rng = Random();
-    List<String> alpha = [];
-    List<CardItem> cards = [];
-    for(int i = 65; i <= 90; ++i){
-      alpha.add(String.fromCharCode(i));
-    }
-    for(int i = 0; i < max/2; ++i){
-      int n = rng.nextInt(alpha.length);
-      cards.add(CardItem(val: alpha[n]));
-      cards.add(CardItem(val: alpha[n]));
-      alpha.removeAt(n);
-    }
-    return _shuffleCards(cards);
+    return _shuffleCards(CardItem.getCards(_rows*_cols));
   }
 
   @override 
@@ -149,27 +140,28 @@ class _GameState extends State<Game> {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-Dialog _buildPopupDialog(BuildContext context) {
-  return Dialog(
+AlertDialog _buildPopupDialog(BuildContext context) {
+  double dialogWidth = MediaQuery.of(context).size.width - 20;
+  return AlertDialog(
     backgroundColor: Colors.transparent,
-    child: Stack(
+    insetPadding: const EdgeInsets.all(0),
+    content: Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
-          height: 320,
-          width: 350,
-          padding: EdgeInsets.all(0),
-          margin: EdgeInsets.all(0),
+          height: deviceWidth,
+          width: deviceWidth,
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/game-paused-bg.png"),
-              fit: BoxFit.cover
+              fit: BoxFit.contain
             )
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 30),
               SizedBox(
                 width: 250,
                 height: 50,
@@ -245,24 +237,10 @@ Dialog _buildPopupDialog(BuildContext context) {
             ],
           ),
        ),
+      
        Positioned(
-        top: -90,
-        left: 45,
-        child: SizedBox(
-          width: 250,
-          height: 200,
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/game-paused-text.png")
-              )
-            ),
-          ),
-        )
-       ),
-       Positioned(
-        bottom: 14,
-        left: 130,
+        bottom: 12,
+        left: (deviceWidth - (dialogWidth / 3)) / 2,
         child: SizedBox(
           height: 70,
           width: 70,
@@ -276,10 +254,10 @@ Dialog _buildPopupDialog(BuildContext context) {
                 Navigator.of(context).pop();
               }, 
               child: const Text(
-                "X",
+                "",
                 textAlign: TextAlign.center, 
                 style: TextStyle(
-                    fontSize: 38,
+                    fontSize: 30,
                     fontFamily: 'MadimiOne',
                     color: Color.fromRGBO(36, 107, 34, 1),
                     shadows: [
@@ -301,6 +279,8 @@ Dialog _buildPopupDialog(BuildContext context) {
 
   @override
   Widget build(BuildContext context) {
+    deviceWidth = MediaQuery.of(context).size.width;
+    deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Center(child: (_counter != 0) ? Text("Time: ${_secondsToMinutes(_counter)} Score: $_score") : const Text("Time's up!")),
@@ -310,14 +290,16 @@ Dialog _buildPopupDialog(BuildContext context) {
               showDialog(
                   context: context,
                   barrierDismissible: false,
-                  builder: (BuildContext context) => _buildPopupDialog(context)
+                  builder: (BuildContext dialogContext) {
+                      return _buildPopupDialog(dialogContext);
+                    }
               );
             }) 
           ],
         ),
       body: GridView.count(
         padding: const EdgeInsets.all(20),
-        childAspectRatio: _rows == 6 ? 0.63 : 0.7,
+        childAspectRatio: _rows == 6 ? 0.63 : 0.8,
         crossAxisCount: _rows,
         mainAxisSpacing: _rows == 6 ? 35.0 : 20.0,
         crossAxisSpacing: _rows == 6? 10.0 : 20.0,
@@ -328,4 +310,5 @@ Dialog _buildPopupDialog(BuildContext context) {
         ),
     );
   }
+
 }
