@@ -156,6 +156,9 @@ class _HomePageState extends State<HomePage> {
                           side: BorderSide (
                             width: 5.0,
                             color:Color.fromRGBO(36, 107, 34, 1)
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)
                           )
                         ),
                         child: const Text(
@@ -189,6 +192,9 @@ class _HomePageState extends State<HomePage> {
                           side: BorderSide (
                             width: 5.0,
                             color:Color.fromRGBO(36, 107, 34, 1)
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)
                           )
                         ),
                       child: const Text(
@@ -224,6 +230,9 @@ class _HomePageState extends State<HomePage> {
                           side: BorderSide (
                             width: 5.0,
                             color:Color.fromRGBO(36, 107, 34, 1)
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)
                           )
                         ),
                     child: const Text(
@@ -256,6 +265,9 @@ class _HomePageState extends State<HomePage> {
                           side: BorderSide (
                             width: 5.0,
                             color:Color.fromRGBO(36, 107, 34, 1)
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)
                           )
                         ),
                     child: const Text(
