@@ -25,7 +25,7 @@ class _CardWidgetState extends State<CardWidget> {
         curve: Curves.fastOutSlowIn,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: (widget.card.isTapped) ? Colors.white : Colors.grey),
+          color: (widget.card.isTapped) ? Colors.white : Color.fromRGBO(69, 141, 67, 1)),
         child: widget.card.isTapped ? Text(widget.card.val) : null,
       ),
     );
