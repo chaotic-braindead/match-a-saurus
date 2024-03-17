@@ -3,6 +3,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/firebase_options.dart';
 import 'package:memory_game/models/player.dart';
+import 'package:memory_game/utils/size_config.dart';
 import 'package:memory_game/widgets/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -23,6 +24,7 @@ class MemoryGame extends StatelessWidget {
   const MemoryGame({super.key});
   @override
   Widget build(BuildContext context) {
+    SizeConfig.init(context);
     return MaterialApp(
       title: 'Memory Game',
       debugShowCheckedModeBanner: false,
