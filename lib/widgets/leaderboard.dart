@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:hive/hive.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/player.dart';
 import 'package:memory_game/utils/size_config.dart';
-import 'package:memory_game/widgets/game.dart';
 import 'package:memory_game/widgets/home_page.dart';
 import 'package:memory_game/widgets/player_widget.dart';
 
