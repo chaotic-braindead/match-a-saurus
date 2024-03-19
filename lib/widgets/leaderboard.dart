@@ -56,17 +56,6 @@ class _LeaderboardState extends State<Leaderboard> {
                 }
             })
         .whenComplete(() {
-<<<<<<< HEAD
-=======
-      for (var wid in _scores) {
-        if (wid.player == _currentPlayer! && widget.score > 0) {
-          wid.color = const Color.fromRGBO(255, 188, 152, 1);
-          _isLoading = false;
-          return;
-        }
-      }
-
->>>>>>> 93a934fc475c539669ae335cb5cef467c3a0b1b1
       setState(() {
         _scores.add(PlayerWidget(
             player: _currentPlayer!,
