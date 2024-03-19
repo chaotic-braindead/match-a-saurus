@@ -109,7 +109,7 @@ class _GameState extends State<Game> {
     }
   }
 
-  void _startTimer(int time)  {
+  void _startTimer(int time) {
     _counter = time;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_counter > 0) {
@@ -127,7 +127,7 @@ class _GameState extends State<Game> {
     });
   }
 
-  void _handleTap(CardItem card) {
+    void _handleTap(CardItem card) {
     if (_counter == 0 || card.isTapped) {
       return;
     }
@@ -144,19 +144,29 @@ class _GameState extends State<Game> {
         _validPairs.add(card);
         _tappedCard = null;
       });
+      if (_score > _bestScore!) {
+        _bestScore = _score;
+      }
     } else {
       setState(() => _enableTaps = false);
       Timer(const Duration(milliseconds: 500), () {
-        _tappedCard?.isTapped = false;
         card.isTapped = false;
-        _tappedCard = null;
-        setState(() => _enableTaps = true);
+        setState(() {
+          _tappedCard?.isTapped = false;
+          _tappedCard = null;
+          _enableTaps = true;
+        });
       });
     }
     if (_validPairs.length == _cards.length) {
       _timer.cancel();
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) =>
+              _buildGameOverDialog(context, "you win!"));
+      //Navigator.pushReplacement(context,
+      //  MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
     }
   }
 
@@ -446,7 +456,7 @@ class _GameState extends State<Game> {
       Container(
           margin: EdgeInsets.fromLTRB(
               SizeConfig.safeBlockHorizontal * 25,
-              SizeConfig.safeBlockVertical * 24.25,
+              SizeConfig.safeBlockVertical * 27,
               SizeConfig.safeBlockHorizontal * 25,
               0),
           child: DefaultTextStyle(
@@ -454,7 +464,7 @@ class _GameState extends State<Game> {
             style: TextStyle(
                 fontFamily: "MadimiOne",
                 height: 0.65,
-                fontSize: 6.15 * SizeConfig.fontSize,
+                fontSize: 6.5 * SizeConfig.fontSize,
                 color: Colors.white,
                 shadows: const [
                   Shadow(
