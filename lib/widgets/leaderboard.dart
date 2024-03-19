@@ -59,6 +59,7 @@ class _LeaderboardState extends State<Leaderboard> {
       for (var wid in _scores) {
         if (wid.player == _currentPlayer! && widget.score > 0) {
           wid.color = const Color.fromRGBO(255, 188, 152, 1);
+          _isLoading = false;
           return;
         }
       }
