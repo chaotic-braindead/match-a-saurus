@@ -453,42 +453,49 @@ class _GameState extends State<Game> {
                           color: Color.fromRGBO(255, 221, 83, 1)),
                     ]),
               ))),
-      Container(
-          margin: EdgeInsets.fromLTRB(
-              SizeConfig.safeBlockHorizontal * 25,
-              msg == "timer ran out!" ? 26.5 * SizeConfig.safeBlockVertical : 29 * SizeConfig.safeBlockVertical, // 28
-              SizeConfig.safeBlockHorizontal * 25,
-              0),
-          child: DefaultTextStyle(
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: "MadimiOne",
-                height: 0.8,
-                fontSize: msg == "timer ran out!" ? 5.8 * SizeConfig.fontSize : 6.2 * SizeConfig.fontSize,
-                color: Colors.white,
-                shadows: const [
-                  Shadow(
-                      offset: Offset(5.75, 6.25),
-                      color: Color.fromRGBO(255, 188, 152, 1)),
-                  Shadow(
-                      // bottomLeft
-                      offset: Offset(-3.5, -3.5),
-                      color: Color.fromRGBO(29, 103, 27, 1)),
-                  Shadow(
-                      // bottomRight
-                      offset: Offset(3.5, -3.5),
-                      color: Color.fromRGBO(29, 103, 27, 1)),
-                  Shadow(
-                      // topRight
-                      offset: Offset(3.5, 3.5),
-                      color: Color.fromRGBO(29, 103, 27, 1)),
-                  Shadow(
-                      // topLeft
-                      offset: Offset(-3.5, 3.5),
-                      color: Color.fromRGBO(29, 103, 27, 1)),
-                ]),
-            child: Text(msg),
-          )),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Container(
+                margin: EdgeInsets.fromLTRB(
+                    SizeConfig.safeBlockHorizontal * 25,
+                    msg == "timer ran out!" ? 25.8 * SizeConfig.safeBlockVertical : 29 * SizeConfig.safeBlockVertical, // 28
+                    SizeConfig.safeBlockHorizontal * 25,
+                    0),
+                child: DefaultTextStyle(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: "MadimiOne",
+                      height: 0.8,
+                      fontSize: msg == "timer ran out!" ? 5.8 * SizeConfig.fontSize : 6.2 * SizeConfig.fontSize,
+                      color: Colors.white,
+                      shadows: const [
+                        Shadow(
+                            offset: Offset(5.75, 6.25),
+                            color: Color.fromRGBO(255, 188, 152, 1)),
+                        Shadow(
+                            // bottomLeft
+                            offset: Offset(-3.5, -3.5),
+                            color: Color.fromRGBO(29, 103, 27, 1)),
+                        Shadow(
+                            // bottomRight
+                            offset: Offset(3.5, -3.5),
+                            color: Color.fromRGBO(29, 103, 27, 1)),
+                        Shadow(
+                            // topRight
+                            offset: Offset(3.5, 3.5),
+                            color: Color.fromRGBO(29, 103, 27, 1)),
+                        Shadow(
+                            // topLeft
+                            offset: Offset(-3.5, 3.5),
+                            color: Color.fromRGBO(29, 103, 27, 1)),
+                      ]),
+                  child: Text(msg),
+                )),
+          ),
+        ],
+      ),
     ]);
   }
   
