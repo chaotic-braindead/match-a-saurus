@@ -180,33 +180,19 @@ Widget _buildOptionsDialog(BuildContext context) {
                   alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(
                       0, 0, 0, SizeConfig.blockSizeVertical * 37),
-                  child: Text("options",
-                      style: TextStyle(
-                          fontFamily: "MadimiOne",
-                          height: 0.65,
-                          fontSize: 6.15 * SizeConfig.fontSize,
-                          color: Colors.white,
-                          shadows: const [
-                            Shadow(
-                                offset: Offset(5.75, 6.25),
-                                color: Color.fromRGBO(255, 188, 152, 1)),
-                            Shadow(
-                                // bottomLeft
-                                offset: Offset(-3.5, -3.5),
-                                color: Color.fromRGBO(29, 103, 27, 1)),
-                            Shadow(
-                                // bottomRight
-                                offset: Offset(3.5, -3.5),
-                                color: Color.fromRGBO(29, 103, 27, 1)),
-                            Shadow(
-                                // topRight
-                                offset: Offset(3.5, 3.5),
-                                color: Color.fromRGBO(29, 103, 27, 1)),
-                            Shadow(
-                                // topLeft
-                                offset: Offset(-3.5, 3.5),
-                                color: Color.fromRGBO(29, 103, 27, 1)),
-                          ]))),
+                  child: SizedBox(
+                    width: 200,
+                    height: 150,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/select-diff-text.png"),
+                          fit: BoxFit.fitWidth
+                        )
+                      ),
+                    ),
+                  )
+                  ),
             ])),
       ]);
     });
