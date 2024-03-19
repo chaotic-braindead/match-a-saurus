@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/card_item.dart';
+import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/card_widget.dart';
 import 'package:memory_game/widgets/home_page.dart';
 import 'package:memory_game/widgets/leaderboard.dart';
@@ -45,6 +46,8 @@ class _GameState extends State<Game> {
   late int _cols;
   int _score = 0;
   late int? _bestScore;
+  late Player? _currentPlayer;
+  late Player? _pb;
   late String? _difficulty;
   late double _multiplier;
   bool _enableTaps = true;
@@ -55,6 +58,10 @@ class _GameState extends State<Game> {
   @override
   void initState() {
     super.initState();
+    _currentPlayer = Database.playerBox
+        ?.get("currentPlayer", defaultValue: Player(name: "Guest"));
+    _pb = Database.playerBox?.get("personalBest");
+
     _difficulty = Database.optionsBox?.get("difficulty");
     int? score = Database.playerBox?.get("personalBest")?.score;
     if (score != null) {
@@ -109,6 +116,34 @@ class _GameState extends State<Game> {
     }
   }
 
+  void _addScore() async {
+    if (_pb == null || (_currentPlayer?.score)! > (_pb?.score)!) {
+      _pb = _currentPlayer;
+      await Database.playerBox?.put("personalBest", _currentPlayer!);
+    }
+    if (_currentPlayer?.name == "Guest") {
+      return;
+    }
+    var value = await Database.firebase
+        .collection("players")
+        .doc(_currentPlayer?.name)
+        .get();
+
+    if (!value.exists) {
+      await Database.firebase
+          .collection("players")
+          .doc(_currentPlayer?.name)
+          .set(_currentPlayer!.toJson());
+      return;
+    }
+    if ((_currentPlayer?.score!)! > value.data()?["score"]) {
+      await Database.firebase
+          .collection("players")
+          .doc(_currentPlayer?.name)
+          .update(_currentPlayer!.toJson());
+    }
+  }
+
   void _startTimer(int time) {
     _counter = time;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -118,6 +153,8 @@ class _GameState extends State<Game> {
         });
       } else {
         timer.cancel();
+        _currentPlayer?.score = _score;
+        _addScore();
         showDialog(
             context: context,
             barrierDismissible: false,
@@ -127,7 +164,7 @@ class _GameState extends State<Game> {
     });
   }
 
-    void _handleTap(CardItem card) {
+  void _handleTap(CardItem card) {
     if (_counter == 0 || card.isTapped) {
       return;
     }
@@ -160,6 +197,8 @@ class _GameState extends State<Game> {
     }
     if (_validPairs.length == _cards.length) {
       _timer.cancel();
+      _currentPlayer?.score = _score;
+      _addScore();
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -458,7 +497,9 @@ class _GameState extends State<Game> {
             child: Container(
                 margin: EdgeInsets.fromLTRB(
                     SizeConfig.safeBlockHorizontal * 25,
-                    msg == "timer ran out!" ? 25.8 * SizeConfig.safeBlockVertical : 29 * SizeConfig.safeBlockVertical, // 28
+                    msg == "timer ran out!"
+                        ? 25.8 * SizeConfig.safeBlockVertical
+                        : 29 * SizeConfig.safeBlockVertical, // 28
                     SizeConfig.safeBlockHorizontal * 25,
                     0),
                 child: DefaultTextStyle(
@@ -466,7 +507,9 @@ class _GameState extends State<Game> {
                   style: TextStyle(
                       fontFamily: "MadimiOne",
                       height: 0.8,
-                      fontSize: msg == "timer ran out!" ? 5.8 * SizeConfig.fontSize : 6.2 * SizeConfig.fontSize,
+                      fontSize: msg == "timer ran out!"
+                          ? 5.8 * SizeConfig.fontSize
+                          : 6.2 * SizeConfig.fontSize,
                       color: Colors.white,
                       shadows: const [
                         Shadow(
@@ -496,9 +539,9 @@ class _GameState extends State<Game> {
       ),
     ]);
   }
-  
+
   @override
- Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     deviceWidth = MediaQuery.of(context).size.width;
     deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -616,7 +659,6 @@ class _GameState extends State<Game> {
             width: 130,
             child: Text(
               "$_difficulty Level",
-
               textAlign: TextAlign.center,
               style: const TextStyle(
                   fontFamily: "MadimiOne",

@@ -32,38 +32,12 @@ class _LeaderboardState extends State<Leaderboard> {
         ?.get("currentPlayer", defaultValue: Player(name: "Guest"));
     _currentPlayer?.score = widget.score;
     _scores = [];
-    _addScore();
+    _getLeaderboard();
     _pb = Database.playerBox?.get("personalBest");
-    if (_pb == null || (_currentPlayer?.score)! > (_pb?.score)!) {
+    if (_pb == null) {
       _pb = _currentPlayer;
       Database.playerBox?.put("personalBest", _currentPlayer!);
     }
-  }
-
-  void _addScore() {
-    if (_currentPlayer?.name == "Guest") {
-      _getLeaderboard();
-      return;
-    }
-    Database.firebase
-        .collection("players")
-        .doc(_currentPlayer?.name)
-        .get()
-        .then((value) {
-      if (!value.exists) {
-        Database.firebase
-            .collection("players")
-            .doc(_currentPlayer?.name)
-            .set(_currentPlayer!.toJson());
-        return;
-      }
-      if ((_currentPlayer?.score!)! > value.data()?["score"]) {
-        Database.firebase
-            .collection("players")
-            .doc(_currentPlayer?.name)
-            .update(_currentPlayer!.toJson());
-      }
-    }).whenComplete(() => _getLeaderboard());
   }
 
   void _getLeaderboard() {
