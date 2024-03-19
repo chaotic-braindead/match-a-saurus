@@ -46,7 +46,7 @@ class _GameState extends State<Game> {
   int _score = 0;
   late int? _bestScore;
   late String? _difficulty;
-  late int _multiplier;
+  late double _multiplier;
   bool _enableTaps = true;
 
   late double deviceWidth;
@@ -69,12 +69,12 @@ class _GameState extends State<Game> {
         _cols = 4;
         break;
       case "Medium":
-        _multiplier = 2;
+        _multiplier = 1.25;
         _rows = 4;
         _cols = 5;
         break;
       case "Hard":
-        _multiplier = 3;
+        _multiplier = 1.5;
         _rows = 6;
         _cols = 6;
         break;
@@ -138,7 +138,7 @@ class _GameState extends State<Game> {
     if (_tappedCard?.val == card.val) {
       setState(() {
         _score += _counter;
-        _score *= _multiplier;
+        _score = (_score * _multiplier).truncate();
         _validPairs.add(_tappedCard!);
         _validPairs.add(card);
         _tappedCard = null;
