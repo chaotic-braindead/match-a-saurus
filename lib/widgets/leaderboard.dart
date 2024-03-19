@@ -83,7 +83,7 @@ class _LeaderboardState extends State<Leaderboard> {
             })
         .whenComplete(() {
       for (var wid in _scores) {
-        if (wid.player == _currentPlayer! && widget.score >= 0) {
+        if (wid.player == _currentPlayer! && widget.score > 0) {
           wid.color = const Color.fromRGBO(255, 188, 152, 1);
           return;
         }
@@ -134,14 +134,14 @@ class _LeaderboardState extends State<Leaderboard> {
                           : ListView.separated(
                               padding: EdgeInsets.fromLTRB(
                                   SizeConfig.blockSizeHorizontal * 16.25,
-                                  SizeConfig.blockSizeVertical * 17.5,
+                                  SizeConfig.blockSizeVertical * 13.5,
                                   SizeConfig.blockSizeHorizontal * 17.5,
                                   0),
                               itemCount: _scores.length,
                               separatorBuilder: (context, index) =>
                                   const SizedBox(height: 5),
                               itemBuilder: (context, index) {
-                                if (_scores[index].player.score! < 0) {
+                                if (_scores[index].player.score! == 0) {
                                   return Container();
                                 }
 
@@ -186,7 +186,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                         )
                                       ],
                                     ),
-                                    (index == 9 && widget.score == -1) ||
+                                    (index == 9 && widget.score == 0) ||
                                             index == 10
                                         ? Container(
                                             margin:
@@ -319,7 +319,7 @@ class _LeaderboardState extends State<Leaderboard> {
           alignment: Alignment.center,
           margin: EdgeInsets.fromLTRB(
               SizeConfig.safeBlockHorizontal * 15,
-              SizeConfig.safeBlockVertical * 70,
+              SizeConfig.safeBlockVertical * 0,
               SizeConfig.safeBlockHorizontal * 15,
               0),
           child: ElevatedButton(

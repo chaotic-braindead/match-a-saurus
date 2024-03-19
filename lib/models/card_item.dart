@@ -5,13 +5,16 @@ class CardItem {
 
   static List<CardItem> getCards(int max) {
     List<CardItem> cards = [];
+    List<int> indexes = List.generate(18, (i) => i + 1); 
 
-    for (int i = 1; i <= max/2; i++) {
+    indexes.shuffle();
+
+    for (int i = 0; i < max / 2; i++) { 
       cards.add(
-        CardItem(val: "assets/cards/$i.png")
+        CardItem(val: "assets/cards/${indexes[i]}.png")
       );
       cards.add(
-        CardItem(val: "assets/cards/$i.png")
+        CardItem(val: "assets/cards/${indexes[i]}.png")
       );
     }
 

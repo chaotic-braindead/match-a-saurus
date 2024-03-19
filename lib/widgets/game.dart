@@ -118,15 +118,16 @@ class _GameState extends State<Game> {
         });
       } else {
         timer.cancel();
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Leaderboard(score: _score)));
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) =>
+                _buildGameOverDialog(context, "timer ran out!"));
       }
     });
   }
 
-  void _handleTap(CardItem card) {
+    void _handleTap(CardItem card) {
     if (_counter == 0 || card.isTapped) {
       return;
     }
@@ -143,19 +144,27 @@ class _GameState extends State<Game> {
         _validPairs.add(card);
         _tappedCard = null;
       });
+      if (_score > _bestScore!) {
+        _bestScore = _score;
+      }
     } else {
       setState(() => _enableTaps = false);
       Timer(const Duration(milliseconds: 500), () {
-        _tappedCard?.isTapped = false;
         card.isTapped = false;
-        _tappedCard = null;
-        setState(() => _enableTaps = true);
+        setState(() {
+          _tappedCard?.isTapped = false;
+          _tappedCard = null;
+          _enableTaps = true;
+        });
       });
     }
     if (_validPairs.length == _cards.length) {
       _timer.cancel();
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) =>
+              _buildGameOverDialog(context, "you win!"));
     }
   }
 
@@ -299,171 +308,357 @@ class _GameState extends State<Game> {
         ));
   }
 
+  Widget _buildGameOverDialog(BuildContext context, String msg) {
+    return Stack(children: [
+      AlertDialog(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        content: SizedBox(
+            width: 999,
+            child: Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/rectangle-bg.png"))),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("score:",
+                          style: TextStyle(
+                              color: const Color.fromRGBO(36, 107, 34, 1),
+                              fontFamily: "MadimiOne",
+                              fontSize: 3.5 * SizeConfig.fontSize,
+                              shadows: const [
+                                Shadow(
+                                    offset: Offset(1.5, 2),
+                                    color: Color.fromRGBO(255, 221, 83, 1)),
+                              ])),
+                      Text("$_score",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "MadimiOne",
+                              fontSize: 6 * SizeConfig.fontSize,
+                              shadows: const [
+                                Shadow(
+                                    offset: Offset(-2.5, 2.5),
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                Shadow(
+                                    offset: Offset(2.5, -2.5),
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                Shadow(
+                                    offset: Offset(-2.5, -2.5),
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                Shadow(
+                                    offset: Offset(2.5, 2.5),
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                              ])),
+                      // const SizedBox(height: 20),
+                      SizedBox(
+                          width: SizeConfig.safeBlockHorizontal * 50,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Game()));
+                              },
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    width: 3.5,
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                // Change your radius here
+                                borderRadius: BorderRadius.circular(15),
+                              ))),
+                              child: FittedBox(
+                                  child: Text("PLAY AGAIN!",
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(
+                                              36, 107, 34, 1),
+                                          fontFamily: "MadimiOne",
+                                          fontSize: 3 * SizeConfig.fontSize,
+                                          shadows: const [
+                                            Shadow(
+                                                // bottomLeft
+                                                offset: Offset(2.5, 3),
+                                                color: Color.fromRGBO(
+                                                    255, 221, 83, 1)),
+                                          ]))))),
+                      SizedBox(height: SizeConfig.blockSizeVertical),
+                      SizedBox(
+                          width: SizeConfig.safeBlockHorizontal * 50,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Leaderboard(score: _score)));
+                              },
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    width: 3.5,
+                                    color: Color.fromRGBO(36, 107, 34, 1)),
+                                // Change your radius here
+                                borderRadius: BorderRadius.circular(15),
+                              ))),
+                              child: FittedBox(
+                                  child: Text("VIEW LEADERBOARD",
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(
+                                              36, 107, 34, 1),
+                                          fontFamily: "MadimiOne",
+                                          fontSize: SizeConfig.fontSize * 3,
+                                          shadows: const [
+                                            Shadow(
+                                                // bottomLeft
+                                                offset: Offset(2.5, 2),
+                                                color: Color.fromRGBO(
+                                                    255, 221, 83, 1)),
+                                          ])))))
+                    ]))),
+      ),
+      Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.fromLTRB(0, 295, 0, 0),
+          child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      const Color.fromRGBO(190, 255, 188, 1)),
+                  minimumSize: MaterialStateProperty.all(const Size(65, 65)),
+                  shape: MaterialStateProperty.all(const CircleBorder(
+                      side: BorderSide(
+                          width: 4, color: Color.fromRGBO(36, 107, 34, 1))))),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const HomePage()));
+              },
+              child: Text(
+                "X",
+                style: TextStyle(
+                    color: const Color.fromRGBO(36, 107, 34, 1),
+                    fontFamily: "MadimiOne",
+                    fontSize: 3.25 * SizeConfig.fontSize,
+                    shadows: const [
+                      Shadow(
+                          // bottomLeft
+                          offset: Offset(2.5, 3),
+                          color: Color.fromRGBO(255, 221, 83, 1)),
+                    ]),
+              ))),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Container(
+                margin: EdgeInsets.fromLTRB(
+                    SizeConfig.safeBlockHorizontal * 25,
+                    msg == "timer ran out!" ? 25.8 * SizeConfig.safeBlockVertical : 29 * SizeConfig.safeBlockVertical, // 28
+                    SizeConfig.safeBlockHorizontal * 25,
+                    0),
+                child: DefaultTextStyle(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: "MadimiOne",
+                      height: 0.8,
+                      fontSize: msg == "timer ran out!" ? 5.8 * SizeConfig.fontSize : 6.2 * SizeConfig.fontSize,
+                      color: Colors.white,
+                      shadows: const [
+                        Shadow(
+                            offset: Offset(5.75, 6.25),
+                            color: Color.fromRGBO(255, 188, 152, 1)),
+                        Shadow(
+                            // bottomLeft
+                            offset: Offset(-3.5, -3.5),
+                            color: Color.fromRGBO(29, 103, 27, 1)),
+                        Shadow(
+                            // bottomRight
+                            offset: Offset(3.5, -3.5),
+                            color: Color.fromRGBO(29, 103, 27, 1)),
+                        Shadow(
+                            // topRight
+                            offset: Offset(3.5, 3.5),
+                            color: Color.fromRGBO(29, 103, 27, 1)),
+                        Shadow(
+                            // topLeft
+                            offset: Offset(-3.5, 3.5),
+                            color: Color.fromRGBO(29, 103, 27, 1)),
+                      ]),
+                  child: Text(msg),
+                )),
+          ),
+        ],
+      ),
+    ]);
+  }
+  
   @override
-  Widget build(BuildContext context) {
+ Widget build(BuildContext context) {
     deviceWidth = MediaQuery.of(context).size.width;
     deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 80,
-          titleSpacing: 20,
-          title: Image.asset(
-            "assets/logo-title.png",
-            width: 115,
-          ),
-          shape: const Border(
-              bottom:
-                  BorderSide(color: Color.fromRGBO(69, 141, 67, 1), width: 6)),
-          elevation: 5,
-          shadowColor: const Color.fromRGBO(255, 185, 148, 1),
-          backgroundColor: const Color.fromRGBO(113, 220, 110, 1),
-          actions: [
-            IconButton(
-              onPressed: () {
-                _timer.cancel();
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) =>
-                        _buildPauseDialog(context));
-              },
-              icon: Image.asset(
-                "assets/pause-btn.png",
-              ),
-              padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-            )
-          ],
+      appBar: AppBar(
+        toolbarHeight: 80,
+        titleSpacing: 20,
+        title: Image.asset(
+          "assets/logo-title.png",
+          width: 115,
         ),
-        body: Column(children: [
-          Stack(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/bg-1.png"),
-                        fit: BoxFit.fill)),
-              ),
-              // score container
-              Container(
-                width: 120,
-                height: 70,
-                margin: EdgeInsets.fromLTRB(
-                    SizeConfig.blockSizeHorizontal * 65, 45, 0, 0),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        width: 3.5,
-                        color: const Color.fromRGBO(117, 187, 115, 1)),
-                    boxShadow: const [
-                      BoxShadow(
-                          offset: Offset(2.25, 2.25),
-                          color: Color.fromRGBO(255, 188, 153, 1)),
-                    ],
-                    color: const Color.fromRGBO(187, 237, 182, 1),
-                    borderRadius: BorderRadius.circular(18)),
-                child: Center(
-                    child: Text(
-                  _score.toString(),
-                  style: const TextStyle(
-                      fontFamily: "MadimiOne",
-                      fontSize: 35,
-                      color: Colors.white,
-                      shadows: shadows),
-                )),
-              ),
-              Container(
-                  margin: EdgeInsets.fromLTRB(
-                      SizeConfig.blockSizeHorizontal * 70, 28, 0, 0),
-                  child: const Text(
-                    "SCORE:",
-                    style: TextStyle(
-                        fontFamily: "MadimiOne",
-                        fontSize: 25,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                              // bottomLeft
-                              offset: Offset(-2.5, -2.5),
-                              color: Color.fromRGBO(117, 187, 115, 1)),
-                          Shadow(
-                              // bottomRight
-                              offset: Offset(2.5, -2.5),
-                              color: Color.fromRGBO(117, 187, 115, 1)),
-                          Shadow(
-                              // topRight
-                              offset: Offset(2.5, 2.5),
-                              color: Color.fromRGBO(117, 187, 115, 1)),
-                          Shadow(
-                              // topLeft
-                              offset: Offset(-2.5, 2.5),
-                              color: Color.fromRGBO(117, 187, 115, 1)),
-                        ]),
-                  )),
-              // timer container
-              Container(
-                  width: 130,
-                  height: 40,
-                  margin: const EdgeInsets.fromLTRB(25, 75, 0, 0),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: const Color.fromRGBO(117, 187, 115, 1)),
-                      color: const Color.fromRGBO(187, 237, 182, 1),
-                      borderRadius: BorderRadius.circular(40)),
-                  child: Center(
-                      child: Text(
-                    _secondsToMinutes(_counter),
-                    style: const TextStyle(
-                        fontFamily: "MadimiOne",
-                        color: Colors.white,
-                        fontSize: 25,
-                        shadows: shadows),
-                  ))),
-              Container(
-                  margin: const EdgeInsets.fromLTRB(27, 30, 0, 0),
-                  child: Text(
-                    "$_difficulty Level",
-                    style: const TextStyle(
-                        fontFamily: "MadimiOne",
-                        fontSize: 20,
-                        color: Colors.white,
-                        shadows: shadows),
-                  )),
-              Container(
-                  margin: const EdgeInsets.fromLTRB(27, 30, 0, 0),
-                  child: Text(
-                    "$_difficulty Level",
-                    style: const TextStyle(
-                        fontFamily: "MadimiOne",
-                        fontSize: 20,
-                        color: Colors.white,
-                        shadows: shadows),
-                  )),
-              Container(
-                  margin: const EdgeInsets.fromLTRB(27, 55, 0, 0),
-                  child: Text(
-                    "Your high score: $_bestScore",
-                    style: const TextStyle(
-                        fontFamily: "MadimiOne",
-                        fontSize: 12,
-                        color: Color.fromRGBO(117, 187, 115, 1)),
-                  )),
-            ],
-          ),
-          // cards
-          Expanded(
-            child: GridView.count(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(20),
-                childAspectRatio: _rows == 6 ? 0.63 : 0.8,
-                crossAxisCount: _rows,
-                mainAxisSpacing: _rows == 6 ? 35.0 : 20.0,
-                crossAxisSpacing: _rows == 6 ? 10.0 : 20.0,
-                children: _cards
-                    .map((card) => CardWidget(
-                          card: card,
-                          onTap: _enableTaps ? _handleTap : null,
-                        ))
-                    .toList()),
+        shape: const Border(
+            bottom:
+                BorderSide(color: Color.fromRGBO(69, 141, 67, 1), width: 6)),
+        elevation: 5,
+        shadowColor: const Color.fromRGBO(255, 185, 148, 1),
+        backgroundColor: const Color.fromRGBO(113, 220, 110, 1),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _timer.cancel();
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) =>
+                      _buildPauseDialog(context));
+            },
+            icon: Image.asset(
+              "assets/pause-btn.png",
+            ),
+            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
           )
-        ]));
+        ],
+      ),
+      body: Stack(children: [
+        Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/bg-1.png"), fit: BoxFit.fill)),
+        ),
+        // score container
+        Container(
+          width: 120,
+          height: 70,
+          margin: EdgeInsets.fromLTRB(
+              SizeConfig.blockSizeHorizontal * 65, 45, 0, 0),
+          decoration: BoxDecoration(
+              border: Border.all(
+                  width: 3.5, color: const Color.fromRGBO(117, 187, 115, 1)),
+              boxShadow: const [
+                BoxShadow(
+                    offset: Offset(2.25, 2.25),
+                    color: Color.fromRGBO(255, 188, 153, 1)),
+              ],
+              color: const Color.fromRGBO(187, 237, 182, 1),
+              borderRadius: BorderRadius.circular(18)),
+          child: Center(
+              child: Text(
+            _score.toString(),
+            style: const TextStyle(
+                fontFamily: "MadimiOne",
+                fontSize: 35,
+                color: Colors.white,
+                shadows: shadows),
+          )),
+        ),
+        Container(
+            margin: EdgeInsets.fromLTRB(
+                SizeConfig.blockSizeHorizontal * 70, 28, 0, 0),
+            child: const Text(
+              "SCORE:",
+              style: TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: 25,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                        // bottomLeft
+                        offset: Offset(-2.5, -2.5),
+                        color: Color.fromRGBO(117, 187, 115, 1)),
+                    Shadow(
+                        // bottomRight
+                        offset: Offset(2.5, -2.5),
+                        color: Color.fromRGBO(117, 187, 115, 1)),
+                    Shadow(
+                        // topRight
+                        offset: Offset(2.5, 2.5),
+                        color: Color.fromRGBO(117, 187, 115, 1)),
+                    Shadow(
+                        // topLeft
+                        offset: Offset(-2.5, 2.5),
+                        color: Color.fromRGBO(117, 187, 115, 1)),
+                  ]),
+            )),
+        // timer container
+        Container(
+            width: 130,
+            height: 40,
+            margin: const EdgeInsets.fromLTRB(25, 75, 0, 0),
+            decoration: BoxDecoration(
+                border:
+                    Border.all(color: const Color.fromRGBO(117, 187, 115, 1)),
+                color: const Color.fromRGBO(187, 237, 182, 1),
+                borderRadius: BorderRadius.circular(40)),
+            child: Center(
+                child: Text(
+              _secondsToMinutes(_counter),
+              style: const TextStyle(
+                  fontFamily: "MadimiOne",
+                  color: Colors.white,
+                  fontSize: 25,
+                  shadows: shadows),
+            ))),
+        Container(
+            margin: const EdgeInsets.fromLTRB(27, 30, 0, 0),
+            width: 130,
+            child: Text(
+              "$_difficulty Level",
+
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: 20,
+                  color: Colors.white,
+                  shadows: shadows),
+            )),
+        Container(
+            margin: const EdgeInsets.fromLTRB(27, 30, 0, 0),
+            width: 130,
+            child: Text(
+              "$_difficulty Level",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: 20,
+                  color: Colors.white,
+                  shadows: shadows),
+            )),
+        Container(
+            margin: const EdgeInsets.fromLTRB(27, 55, 0, 0),
+            width: 130,
+            child: Text(
+              "Your high score: $_bestScore",
+              style: const TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: 12,
+                  color: Color.fromRGBO(117, 187, 115, 1)),
+            )),
+        GridView.count(
+            padding: const EdgeInsets.fromLTRB(20, 145, 20, 20),
+            childAspectRatio: _rows == 6 ? 0.8 : 0.93,
+            crossAxisCount: _rows,
+            mainAxisSpacing: _rows == 6 ? 20.0 : 5.0,
+            crossAxisSpacing: _rows == 6 ? 10.0 : 10.0,
+            children: _cards
+                .map((card) => CardWidget(
+                      card: card,
+                      onTap: _enableTaps ? _handleTap : null,
+                    ))
+                .toList())
+      ]),
+    );
   }
 }
