@@ -5,15 +5,11 @@ class CardItem {
 
   static List<CardItem> getCards(int max) {
     List<CardItem> cards = [];
-    List<int> indexes = [];
-
-    for (int i = 1; i <= 18; i++) {
-      indexes.add(i);
-    }
+    List<int> indexes = List.generate(18, (i) => i + 1); 
 
     indexes.shuffle();
 
-    for (int i = 1; i <= max/2; i++) {
+    for (int i = 0; i < max / 2; i++) { 
       cards.add(
         CardItem(val: "assets/cards/${indexes[i]}.png")
       );

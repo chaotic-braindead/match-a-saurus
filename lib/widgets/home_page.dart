@@ -371,7 +371,7 @@ Widget _buildOptionsDialog(BuildContext context) {
                       ),
                     onPressed: () {
                       // Redirect to leaderboard
-                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: -1)));
+                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: 0)));
                     },
                   ),
                 ),
