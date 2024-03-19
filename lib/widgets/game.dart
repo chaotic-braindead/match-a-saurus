@@ -456,15 +456,15 @@ class _GameState extends State<Game> {
       Container(
           margin: EdgeInsets.fromLTRB(
               SizeConfig.safeBlockHorizontal * 25,
-              SizeConfig.safeBlockVertical * 27,
+              msg == "timer ran out!" ? 26.5 * SizeConfig.safeBlockVertical : 29 * SizeConfig.safeBlockVertical, // 28
               SizeConfig.safeBlockHorizontal * 25,
               0),
           child: DefaultTextStyle(
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: "MadimiOne",
-                height: 0.65,
-                fontSize: 6.5 * SizeConfig.fontSize,
+                height: 0.8,
+                fontSize: msg == "timer ran out!" ? 5.8 * SizeConfig.fontSize : 6.2 * SizeConfig.fontSize,
                 color: Colors.white,
                 shadows: const [
                   Shadow(
