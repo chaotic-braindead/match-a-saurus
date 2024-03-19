@@ -165,8 +165,6 @@ class _GameState extends State<Game> {
           barrierDismissible: false,
           builder: (BuildContext context) =>
               _buildGameOverDialog(context, "you win!"));
-      //Navigator.pushReplacement(context,
-      //  MaterialPageRoute(builder: (context) => Leaderboard(score: _score)));
     }
   }
 
@@ -664,19 +662,3 @@ class _GameState extends State<Game> {
     );
   }
 }
-
- //     Container(
-      //       child: GridView.count(
-      //         padding: const EdgeInsets.all(20),
-      //         childAspectRatio: _rows == 6 ? 0.63 : 0.8,
-      //         crossAxisCount: _rows,
-      //         mainAxisSpacing: _rows == 6 ? 35.0 : 20.0,
-      //         crossAxisSpacing: _rows == 6? 10.0 : 20.0,
-      //         children: _cards.map((card) => CardWidget(
-      //           card: card,
-      //           onTap: _enableTaps ? _handleTap : null,
-      //           )).toList()
-      //         ),
-      //     ),
-      //   // score container
-      //   
