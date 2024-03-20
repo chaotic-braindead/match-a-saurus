@@ -64,31 +64,26 @@ class _GameState extends State<Game> {
         ?.get("currentPlayer", defaultValue: Player(name: "Guest"));
     _pb = Database.playerBox?.get("personalBest");
 
-    _difficulty = Database.optionsBox?.get("difficulty");
+    _difficulty = Database.optionsBox?.get("difficulty")!;
     int? score = Database.playerBox?.get("personalBest")?.score;
     if (score != null) {
       _bestScore = score;
     } else {
       _bestScore = 0;
     }
-    switch (_difficulty) {
-      case "Easy":
-        _multiplier = 1;
-        _rows = 3;
-        _cols = 4;
-        break;
-      case "Medium":
-        _multiplier = 1.25;
-        _rows = 4;
-        _cols = 5;
-        break;
-      case "Hard":
-        _multiplier = 1.5;
-        _rows = 6;
-        _cols = 6;
-        break;
-      default:
-        throw Exception("Must not be reached");
+
+    if (_difficulty!.contains("Easy")) {
+      _multiplier = 1;
+      _rows = 3;
+      _cols = 4;
+    } else if (_difficulty!.contains("Medium")) {
+      _multiplier = 1.25;
+      _rows = 4;
+      _cols = 5;
+    } else {
+      _multiplier = 1.5;
+      _rows = 6;
+      _cols = 6;
     }
     _cards = _getRandomCards(_rows * _cols);
     _tappedCard = null;
@@ -615,7 +610,7 @@ class _GameState extends State<Game> {
             margin: const EdgeInsets.fromLTRB(27, 30, 0, 0),
             width: 130,
             child: Text(
-              "$_difficulty Level",
+              "${_difficulty!.split(" ")[0]} Level",
               textAlign: TextAlign.left,
               style: const TextStyle(
                   fontFamily: "MadimiOne",

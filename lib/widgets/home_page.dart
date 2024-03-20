@@ -9,7 +9,11 @@ import 'package:memory_game/widgets/leaderboard.dart';
 import 'package:memory_game/widgets/card_catalog.dart';
 import 'package:memory_game/utils/size_config.dart';
 
-final List<String> difficultyList = <String>['Easy', 'Medium', 'Hard'];
+final List<String> difficultyList = <String>[
+  'Easy (3x4)',
+  'Medium (4x5)',
+  'Hard (6x6)'
+];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -81,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                                         "Difficulty",
                                         style: TextStyle(
                                             fontSize:
-                                                SizeConfig.fontSize * 2.25,
+                                                SizeConfig.fontSize * 1.75,
                                             fontFamily: "MadimiOne",
                                             color: const Color.fromRGBO(
                                                 69, 141, 67, 1)),
@@ -108,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                                                         style: TextStyle(
                                                             fontSize: SizeConfig
                                                                     .fontSize *
-                                                                2.25,
+                                                                1.5,
                                                             fontFamily:
                                                                 "MadimiOne",
                                                             color: const Color
@@ -124,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                                         "Playing as",
                                         style: TextStyle(
                                             fontSize:
-                                                SizeConfig.fontSize * 2.25,
+                                                SizeConfig.fontSize * 1.75,
                                             fontFamily: "MadimiOne",
                                             color: const Color.fromRGBO(
                                                 69, 141, 67, 1)),
@@ -134,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                                           child: TextField(
                                             style: TextStyle(
                                                 fontSize:
-                                                    SizeConfig.fontSize * 2.25,
+                                                    SizeConfig.fontSize * 1.5,
                                                 fontFamily: "MadimiOne",
                                                 color: const Color.fromRGBO(
                                                     147, 123, 107, 1)),
@@ -167,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                         _updateCurrentPlayer(Player(name: _controller.text));
                       },
                       child: Text(
-                        "X",
+                        "✓",
                         style: TextStyle(
                             color: const Color.fromRGBO(36, 107, 34, 1),
                             fontFamily: "MadimiOne",
@@ -188,14 +192,11 @@ class _HomePageState extends State<HomePage> {
                     height: 100,
                     child: Container(
                       decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/select-diff-text.png"),
-                          fit: BoxFit.fitWidth
-                        )
-                      ),
+                          image: DecorationImage(
+                              image: AssetImage("assets/select-diff-text.png"),
+                              fit: BoxFit.fitWidth)),
                     ),
-                  )
-                  ),
+                  )),
             ])),
       ]);
     });
