@@ -15,6 +15,13 @@ final List<String> difficultyList = <String>[
   'Hard (6x6)'
 ];
 
+final List<String> timerList = <String>[
+  '30 seconds',
+  '1 minute',
+  '2 minutes',
+  '3 minutes'
+];
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -24,8 +31,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Player? currentPlayer;
-  late TextEditingController _controller;
+  late TextEditingController _playerController;
   String _difficulty = difficultyList.first;
+  String _timer = timerList[1];
 
   @override
   void setState(fn) {
@@ -39,20 +47,26 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     setState(() => currentPlayer = Database.playerBox
         ?.get("currentPlayer", defaultValue: Player(name: "Guest")));
-    setState(
-        () => _controller = TextEditingController(text: currentPlayer?.name));
+    setState(() =>
+        _playerController = TextEditingController(text: currentPlayer?.name));
     String? diff = Database.optionsBox?.get("difficulty");
     if (diff != null) {
-      setState(() => _difficulty = diff);
+      _difficulty = diff;
     } else {
       Database.optionsBox?.put("difficulty", difficultyList.first);
+    }
+    String? timer = Database.optionsBox?.get("timer");
+    if (timer != null) {
+      _timer = timer;
+    } else {
+      Database.optionsBox?.put("difficulty", timerList[1]);
     }
   }
 
   void _updateCurrentPlayer(Player newPlayer) async {
     if (newPlayer.name != "Guest") {
       await Database.playerBox?.put("currentPlayer", newPlayer);
-      setState(() => currentPlayer?.name = _controller.text);
+      setState(() => currentPlayer?.name = _playerController.text);
     }
     Navigator.of(context).pop();
   }
@@ -83,6 +97,7 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       Text(
                                         "Difficulty",
+                                        textAlign: TextAlign.left,
                                         style: TextStyle(
                                             fontSize:
                                                 SizeConfig.fontSize * 1.75,
@@ -125,6 +140,48 @@ class _HomePageState extends State<HomePage> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Text(
+                                        "Timer",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize:
+                                                SizeConfig.fontSize * 1.75,
+                                            fontFamily: "MadimiOne",
+                                            color: const Color.fromRGBO(
+                                                69, 141, 67, 1)),
+                                      ),
+                                      SizedBox(
+                                          width: 100,
+                                          child: DropdownButton<String>(
+                                              elevation: 0,
+                                              dropdownColor:
+                                                  const Color.fromRGBO(
+                                                      252, 211, 184, 1),
+                                              value: _timer,
+                                              onChanged: (value) async {
+                                                await Database.optionsBox
+                                                    ?.put("timer", value!);
+                                                setState(() => _timer = value!);
+                                              },
+                                              items: timerList.map((value) {
+                                                return DropdownMenuItem(
+                                                    value: value,
+                                                    child: Text(value,
+                                                        style: TextStyle(
+                                                            fontSize: SizeConfig
+                                                                    .fontSize *
+                                                                1.5,
+                                                            fontFamily:
+                                                                "MadimiOne",
+                                                            color: const Color
+                                                                .fromRGBO(147,
+                                                                123, 107, 1))));
+                                              }).toList()))
+                                    ]),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
                                         "Playing as",
                                         style: TextStyle(
                                             fontSize:
@@ -142,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                                                 fontFamily: "MadimiOne",
                                                 color: const Color.fromRGBO(
                                                     147, 123, 107, 1)),
-                                            controller: _controller,
+                                            controller: _playerController,
                                             inputFormatters: [
                                               FilteringTextInputFormatter.allow(
                                                   RegExp("[a-zA-Z0-9]")),
@@ -168,7 +225,8 @@ class _HomePageState extends State<HomePage> {
                                   width: 4,
                                   color: Color.fromRGBO(36, 107, 34, 1))))),
                       onPressed: () {
-                        _updateCurrentPlayer(Player(name: _controller.text));
+                        _updateCurrentPlayer(
+                            Player(name: _playerController.text));
                       },
                       child: Text(
                         "✓",

@@ -88,7 +88,14 @@ class _GameState extends State<Game> {
     _cards = _getRandomCards(_rows * _cols);
     _tappedCard = null;
     _validPairs = [];
-    _startTimer(60);
+
+    String? timerOption = Database.optionsBox?.get("timer")!.split(" ")[0];
+    int time = int.parse(timerOption!);
+    if (time > 3) {
+      _startTimer(time);
+    } else {
+      _startTimer(time * 60);
+    }
   }
 
   List<CardItem> _shuffleCards(List<CardItem> cards) {
@@ -174,7 +181,9 @@ class _GameState extends State<Game> {
 
     if (_tappedCard?.val == card.val) {
       setState(() {
-        _score += _counter;
+        _score += (_counter > 60)
+            ? (_counter / (_multiplier * 2.25)).truncate()
+            : _counter;
         _score = (_score * _multiplier).truncate();
         _validPairs.add(_tappedCard!);
         _validPairs.add(card);
