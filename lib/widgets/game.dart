@@ -640,7 +640,7 @@ class _GameState extends State<Game> {
             width: 130,
             child: Text(
               "$_difficulty Level",
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
               style: const TextStyle(
                   fontFamily: "MadimiOne",
                   fontSize: 20,
@@ -652,7 +652,7 @@ class _GameState extends State<Game> {
             width: 130,
             child: Text(
               "$_difficulty Level",
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
               style: const TextStyle(
                   fontFamily: "MadimiOne",
                   fontSize: 20,
