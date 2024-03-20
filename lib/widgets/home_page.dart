@@ -6,6 +6,7 @@ import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/game.dart';
 import 'package:memory_game/widgets/leaderboard.dart';
+import 'package:memory_game/widgets/card_catalog.dart';
 import 'package:memory_game/utils/size_config.dart';
 
 final List<String> difficultyList = <String>['Easy', 'Medium', 'Hard'];
@@ -180,19 +181,33 @@ Widget _buildOptionsDialog(BuildContext context) {
                   alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(
                       0, 0, 0, SizeConfig.blockSizeVertical * 37),
-                  child: SizedBox(
-                    width: 200,
-                    height: 150,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/select-diff-text.png"),
-                          fit: BoxFit.fitWidth
-                        )
-                      ),
-                    ),
-                  )
-                  ),
+                  child: Text("options",
+                      style: TextStyle(
+                          fontFamily: "MadimiOne",
+                          height: 0.65,
+                          fontSize: 6.15 * SizeConfig.fontSize,
+                          color: Colors.white,
+                          shadows: const [
+                            Shadow(
+                                offset: Offset(5.75, 6.25),
+                                color: Color.fromRGBO(255, 188, 152, 1)),
+                            Shadow(
+                                // bottomLeft
+                                offset: Offset(-3.5, -3.5),
+                                color: Color.fromRGBO(29, 103, 27, 1)),
+                            Shadow(
+                                // bottomRight
+                                offset: Offset(3.5, -3.5),
+                                color: Color.fromRGBO(29, 103, 27, 1)),
+                            Shadow(
+                                // topRight
+                                offset: Offset(3.5, 3.5),
+                                color: Color.fromRGBO(29, 103, 27, 1)),
+                            Shadow(
+                                // topLeft
+                                offset: Offset(-3.5, 3.5),
+                                color: Color.fromRGBO(29, 103, 27, 1)),
+                          ]))),
             ])),
       ]);
     });
@@ -326,6 +341,45 @@ Widget _buildOptionsDialog(BuildContext context) {
                     ),
                   ],
                 ),
+
+                SizedBox(height: 15),
+                SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                          side: BorderSide (
+                            width: 5.0,
+                            color:Color.fromRGBO(36, 107, 34, 1)
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)
+                          )
+                        ),
+                    child: const Text(
+                      "CARD CATALOG",
+                      style: TextStyle(
+                            fontSize: 25,
+                            fontFamily: 'MadimiOne',
+                            color: Color.fromRGBO(36, 107, 34, 1),
+                            shadows: [
+                              Shadow( // Adjust offsets and blurRadius for stroke thickness
+                                offset: Offset(3.0, 3.0), // Adjust for stroke position
+                                blurRadius: 2.0,
+                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
+                              ),
+                            ],
+                            ),
+                      ),
+                    onPressed: () {
+                      // Redirect to card catalog
+                       Navigator.pushReplacement(
+                            context, MaterialPageRoute(builder: (context) => const CardCatalog())
+                          );
+                    },
+                  ),
+                ),
+
                 SizedBox(height: 15),
                 SizedBox(
                   width: 250,
@@ -343,7 +397,7 @@ Widget _buildOptionsDialog(BuildContext context) {
                     child: const Text(
                       "VIEW HIGH SCORES",
                       style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 22,
                             fontFamily: 'MadimiOne',
                             color: Color.fromRGBO(36, 107, 34, 1),
                             shadows: [
