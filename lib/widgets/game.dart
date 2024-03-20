@@ -562,60 +562,35 @@ class _GameState extends State<Game> {
               image: DecorationImage(
                   image: AssetImage("assets/bg-1.png"), fit: BoxFit.fill)),
         ),
-        // score container
+        // SCORE container
         Container(
-          width: 120,
-          height: 70,
-          margin: EdgeInsets.fromLTRB(
-              SizeConfig.blockSizeHorizontal * 65, 45, 0, 0),
-          decoration: BoxDecoration(
-              border: Border.all(
-                  width: 3.5, color: const Color.fromRGBO(117, 187, 115, 1)),
-              boxShadow: const [
-                BoxShadow(
-                    offset: Offset(2.25, 2.25),
-                    color: Color.fromRGBO(255, 188, 153, 1)),
-              ],
-              color: const Color.fromRGBO(187, 237, 182, 1),
-              borderRadius: BorderRadius.circular(18)),
-          child: Center(
-              child: Text(
-            _score.toString(),
-            style: const TextStyle(
-                fontFamily: "MadimiOne",
-                fontSize: 35,
-                color: Colors.white,
-                shadows: shadows),
-          )),
+          margin: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 65, 45, 0, 0),
+          child: SizedBox(
+            width: 120,
+            height: 80,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/score-bg.png")
+                )
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    _score.toString(),
+                    style: const TextStyle(
+                      fontFamily: "MadimiOne",
+                      fontSize: 35,
+                      color: Colors.white,
+                      shadows: shadows
+                    ),
+                    ),
+                ),
+              ),
+            ),
+          ),
         ),
-        Container(
-            margin: EdgeInsets.fromLTRB(
-                SizeConfig.blockSizeHorizontal * 70, 28, 0, 0),
-            child: const Text(
-              "SCORE:",
-              style: TextStyle(
-                  fontFamily: "MadimiOne",
-                  fontSize: 25,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                        // bottomLeft
-                        offset: Offset(-2.5, -2.5),
-                        color: Color.fromRGBO(117, 187, 115, 1)),
-                    Shadow(
-                        // bottomRight
-                        offset: Offset(2.5, -2.5),
-                        color: Color.fromRGBO(117, 187, 115, 1)),
-                    Shadow(
-                        // topRight
-                        offset: Offset(2.5, 2.5),
-                        color: Color.fromRGBO(117, 187, 115, 1)),
-                    Shadow(
-                        // topLeft
-                        offset: Offset(-2.5, 2.5),
-                        color: Color.fromRGBO(117, 187, 115, 1)),
-                  ]),
-            )),
         // timer container
         Container(
             width: 130,
