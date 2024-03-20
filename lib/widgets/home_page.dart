@@ -23,35 +23,37 @@ class _HomePageState extends State<HomePage> {
   late TextEditingController _controller;
   String _difficulty = difficultyList.first;
 
-  @override 
-  void setState(fn){
-    if(mounted){
+  @override
+  void setState(fn) {
+    if (mounted) {
       super.setState(fn);
     }
   }
-  @override 
-  void initState(){
+
+  @override
+  void initState() {
     super.initState();
-    setState(() => currentPlayer = Database.playerBox?.get("currentPlayer", defaultValue: Player(name: "Guest")));
-    setState(() => _controller = TextEditingController(text: currentPlayer?.name)); 
+    setState(() => currentPlayer = Database.playerBox
+        ?.get("currentPlayer", defaultValue: Player(name: "Guest")));
+    setState(
+        () => _controller = TextEditingController(text: currentPlayer?.name));
     String? diff = Database.optionsBox?.get("difficulty");
-    if(diff != null){
+    if (diff != null) {
       setState(() => _difficulty = diff);
-    } 
-    else{
+    } else {
       Database.optionsBox?.put("difficulty", difficultyList.first);
     }
   }
 
   void _updateCurrentPlayer(Player newPlayer) async {
-    if(newPlayer.name != "Guest"){
+    if (newPlayer.name != "Guest") {
       await Database.playerBox?.put("currentPlayer", newPlayer);
-      setState(() => currentPlayer?.name = _controller.text); 
+      setState(() => currentPlayer?.name = _controller.text);
     }
     Navigator.of(context).pop();
   }
 
-Widget _buildOptionsDialog(BuildContext context) {
+  Widget _buildOptionsDialog(BuildContext context) {
     return StatefulBuilder(builder: (context, setState) {
       return Stack(children: [
         AlertDialog(
@@ -199,7 +201,7 @@ Widget _buildOptionsDialog(BuildContext context) {
     });
   }
 
-   Future<bool> _onWillPop() async {
+  Future<bool> _onWillPop() async {
     return (await showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -214,7 +216,7 @@ Widget _buildOptionsDialog(BuildContext context) {
                 onPressed: () {
                   Navigator.of(context).pop(true);
                   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-                  },
+                },
                 child: const Text('Yes'),
               ),
             ],
@@ -229,231 +231,218 @@ Widget _buildOptionsDialog(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          color: Color.fromRGBO(212, 253, 210, 1),
-          image: DecorationImage(
-            image: AssetImage("assets/bg-2.png"),
-            fit: BoxFit.cover
-          )
-        ),
+            color: Color.fromRGBO(212, 253, 210, 1),
+            image: DecorationImage(
+                image: AssetImage("assets/bg-2.png"), fit: BoxFit.cover)),
         child: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            _homeTitle(),
+            Column(
               children: [
-                _homeTitle(),
-                Column(
-                  children: [
-                    SizedBox(
-                      width: 185,
-                      height: 140,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
+                SizedBox(
+                  width: 185,
+                  height: 140,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
                             image: AssetImage("assets/logo-dino.png"),
-                            fit: BoxFit.cover
-                          )
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 250,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          side: BorderSide (
-                            width: 5.0,
-                            color:Color.fromRGBO(36, 107, 34, 1)
-                          ),
+                            fit: BoxFit.cover)),
+                  ),
+                ),
+                SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          side: BorderSide(
+                              width: 5.0,
+                              color: Color.fromRGBO(36, 107, 34, 1)),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0)
-                          )
-                        ),
-                        child: const Text(
-                          "PLAY",
-                          style: TextStyle(
-                            fontSize: 29,
-                            fontFamily: 'MadimiOne',
-                            color: Color.fromRGBO(36, 107, 34, 1),
-                            shadows: [
-                              Shadow( // Adjust offsets and blurRadius for stroke thickness
-                                offset: Offset(3.0, 3.0), // Adjust for stroke position
-                                blurRadius: 2.0,
-                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
-                              ),
-                            ],
+                              borderRadius: BorderRadius.circular(15.0))),
+                      child: const Text(
+                        "PLAY",
+                        style: TextStyle(
+                          fontSize: 29,
+                          fontFamily: 'MadimiOne',
+                          color: Color.fromRGBO(36, 107, 34, 1),
+                          shadows: [
+                            Shadow(
+                              // Adjust offsets and blurRadius for stroke thickness
+                              offset: Offset(
+                                  3.0, 3.0), // Adjust for stroke position
+                              blurRadius: 2.0,
+                              color: Color.fromRGBO(
+                                  255, 220, 80, 1), // Set your stroke color
                             ),
-                          ),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => const Game())
-                          );
-                        }
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    SizedBox(
-                      width: 250,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          side: BorderSide (
-                            width: 5.0,
-                            color:Color.fromRGBO(36, 107, 34, 1)
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0)
-                          )
+                          ],
                         ),
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Game()));
+                      }),
+                ),
+                SizedBox(height: 15),
+                SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          side: BorderSide(
+                              width: 5.0,
+                              color: Color.fromRGBO(36, 107, 34, 1)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0))),
                       child: const Text(
                         "OPTIONS",
                         style: TextStyle(
-                            fontSize: 29,
-                            fontFamily: 'MadimiOne',
-                            color: Color.fromRGBO(36, 107, 34, 1),
-                            shadows: [
-                              Shadow( // Adjust offsets and blurRadius for stroke thickness
-                                offset: Offset(3.0, 3.0), // Adjust for stroke position
-                                blurRadius: 2.0,
-                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
-                              ),
-                            ],
+                          fontSize: 29,
+                          fontFamily: 'MadimiOne',
+                          color: Color.fromRGBO(36, 107, 34, 1),
+                          shadows: [
+                            Shadow(
+                              // Adjust offsets and blurRadius for stroke thickness
+                              offset: Offset(
+                                  3.0, 3.0), // Adjust for stroke position
+                              blurRadius: 2.0,
+                              color: Color.fromRGBO(
+                                  255, 220, 80, 1), // Set your stroke color
                             ),
+                          ],
                         ),
+                      ),
                       onPressed: () {
                         showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) => _buildOptionsDialog(context),);
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) =>
+                              _buildOptionsDialog(context),
+                        );
                       }),
-                    ),
-                  ],
                 ),
-
-                SizedBox(height: 15),
-                SizedBox(
-                  width: 250,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                          side: BorderSide (
-                            width: 5.0,
-                            color:Color.fromRGBO(36, 107, 34, 1)
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0)
-                          )
-                        ),
-                    child: const Text(
-                      "CARD CATALOG",
-                      style: TextStyle(
-                            fontSize: 25,
-                            fontFamily: 'MadimiOne',
-                            color: Color.fromRGBO(36, 107, 34, 1),
-                            shadows: [
-                              Shadow( // Adjust offsets and blurRadius for stroke thickness
-                                offset: Offset(3.0, 3.0), // Adjust for stroke position
-                                blurRadius: 2.0,
-                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
-                              ),
-                            ],
-                            ),
+              ],
+            ),
+            SizedBox(height: 15),
+            SizedBox(
+              width: 250,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    side: BorderSide(
+                        width: 5.0, color: Color.fromRGBO(36, 107, 34, 1)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0))),
+                child: const Text(
+                  "CARD CATALOG",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontFamily: 'MadimiOne',
+                    color: Color.fromRGBO(36, 107, 34, 1),
+                    shadows: [
+                      Shadow(
+                        // Adjust offsets and blurRadius for stroke thickness
+                        offset: Offset(3.0, 3.0), // Adjust for stroke position
+                        blurRadius: 2.0,
+                        color: Color.fromRGBO(
+                            255, 220, 80, 1), // Set your stroke color
                       ),
-                    onPressed: () {
-                      // Redirect to card catalog
-                       Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => const CardCatalog())
-                          );
-                    },
+                    ],
                   ),
                 ),
-
-                SizedBox(height: 15),
-                SizedBox(
-                  width: 250,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                          side: BorderSide (
-                            width: 5.0,
-                            color:Color.fromRGBO(36, 107, 34, 1)
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0)
-                          )
-                        ),
-                    child: const Text(
-                      "VIEW HIGH SCORES",
-                      style: TextStyle(
-                            fontSize: 22,
-                            fontFamily: 'MadimiOne',
-                            color: Color.fromRGBO(36, 107, 34, 1),
-                            shadows: [
-                              Shadow( // Adjust offsets and blurRadius for stroke thickness
-                                offset: Offset(3.0, 3.0), // Adjust for stroke position
-                                blurRadius: 2.0,
-                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
-                              ),
-                            ],
-                            ),
+                onPressed: () {
+                  // Redirect to card catalog
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CardCatalog()));
+                },
+              ),
+            ),
+            SizedBox(height: 15),
+            SizedBox(
+              width: 250,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    side: BorderSide(
+                        width: 5.0, color: Color.fromRGBO(36, 107, 34, 1)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0))),
+                child: const Text(
+                  "VIEW HIGH SCORES",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontFamily: 'MadimiOne',
+                    color: Color.fromRGBO(36, 107, 34, 1),
+                    shadows: [
+                      Shadow(
+                        // Adjust offsets and blurRadius for stroke thickness
+                        offset: Offset(3.0, 3.0), // Adjust for stroke position
+                        blurRadius: 2.0,
+                        color: Color.fromRGBO(
+                            255, 220, 80, 1), // Set your stroke color
                       ),
-                    onPressed: () {
-                      // Redirect to leaderboard
-                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Leaderboard(score: 0)));
-                    },
+                    ],
                   ),
                 ),
-                SizedBox(height: 15),
-                SizedBox(
-                  width: 250,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                          side: BorderSide (
-                            width: 5.0,
-                            color:Color.fromRGBO(36, 107, 34, 1)
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0)
-                          )
-                        ),
-                    child: const Text(
-                      "EXIT",
-                      style: TextStyle(
-                            fontSize: 29,
-                            fontFamily: 'MadimiOne',
-                            color: Color.fromRGBO(36, 107, 34, 1),
-                            shadows: [
-                              Shadow( // Adjust offsets and blurRadius for stroke thickness
-                                offset: Offset(3.0, 3.0), // Adjust for stroke position
-                                blurRadius: 2.0,
-                                color: Color.fromRGBO(255, 220, 80, 1), // Set your stroke color
-                              ),
-                            ],
-                            ),
+                onPressed: () {
+                  // Redirect to leaderboard
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Leaderboard(score: 0)));
+                },
+              ),
+            ),
+            SizedBox(height: 15),
+            SizedBox(
+              width: 250,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    side: BorderSide(
+                        width: 5.0, color: Color.fromRGBO(36, 107, 34, 1)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0))),
+                child: const Text(
+                  "EXIT",
+                  style: TextStyle(
+                    fontSize: 29,
+                    fontFamily: 'MadimiOne',
+                    color: Color.fromRGBO(36, 107, 34, 1),
+                    shadows: [
+                      Shadow(
+                        // Adjust offsets and blurRadius for stroke thickness
+                        offset: Offset(3.0, 3.0), // Adjust for stroke position
+                        blurRadius: 2.0,
+                        color: Color.fromRGBO(
+                            255, 220, 80, 1), // Set your stroke color
                       ),
-                    onPressed: () {
-                      _onWillPop();
-                    },
+                    ],
                   ),
-                )
-              ]
-          ),
+                ),
+                onPressed: () {
+                  _onWillPop();
+                },
+              ),
+            )
+          ]),
         ),
       ),
     );
   }
 
-SizedBox _homeTitle() {
+  SizedBox _homeTitle() {
     return SizedBox(
-        width: 300,
-        height: 175,
-        child: Container(
-          decoration: BoxDecoration(
+      width: 300,
+      height: 175,
+      child: Container(
+        decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/logo-title.png"),
-              fit: BoxFit.cover
-            )
-          ),
-        ),
-      );
+                image: AssetImage("assets/logo-title.png"), fit: BoxFit.cover)),
+      ),
+    );
   }
 }

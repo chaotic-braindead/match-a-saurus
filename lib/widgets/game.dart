@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/card_item.dart';
 import 'package:memory_game/models/player.dart';
@@ -45,6 +46,7 @@ class _GameState extends State<Game> {
   late int _rows;
   late int _cols;
   int _score = 0;
+  int _flips = 0;
   late int? _bestScore;
   late Player? _currentPlayer;
   late Player? _pb;
@@ -173,6 +175,8 @@ class _GameState extends State<Game> {
     if (_tappedCard == card) {
       return;
     }
+    setState(() => ++_flips);
+
     if (_tappedCard?.val == card.val) {
       setState(() {
         _score += _counter;
@@ -507,14 +511,13 @@ class _GameState extends State<Game> {
                   height: 90,
                   child: Container(
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: msg == "timer ran out!" ? AssetImage("assets/timer-ran-out.png") : AssetImage("assets/you-win-text.png"),
-                        fit: BoxFit.fitWidth
-                      )
-                    ),
+                        image: DecorationImage(
+                            image: msg == "timer ran out!"
+                                ? AssetImage("assets/timer-ran-out.png")
+                                : AssetImage("assets/you-win-text.png"),
+                            fit: BoxFit.fitWidth)),
                   ),
-                )
-                ),
+                )),
           ),
         ],
       ),
@@ -564,28 +567,26 @@ class _GameState extends State<Game> {
         ),
         // SCORE container
         Container(
-          margin: EdgeInsets.fromLTRB(SizeConfig.blockSizeHorizontal * 65, 45, 0, 0),
+          margin: EdgeInsets.fromLTRB(
+              SizeConfig.blockSizeHorizontal * 65, 45, 0, 0),
           child: SizedBox(
             width: 120,
             height: 80,
             child: Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/score-bg.png")
-                )
-              ),
+                  image: DecorationImage(
+                      image: AssetImage("assets/score-bg.png"))),
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(
                     _score.toString(),
                     style: const TextStyle(
-                      fontFamily: "MadimiOne",
-                      fontSize: 35,
-                      color: Colors.white,
-                      shadows: shadows
-                    ),
-                    ),
+                        fontFamily: "MadimiOne",
+                        fontSize: 35,
+                        color: Colors.white,
+                        shadows: shadows),
+                  ),
                 ),
               ),
             ),
@@ -622,18 +623,7 @@ class _GameState extends State<Game> {
                   color: Colors.white,
                   shadows: shadows),
             )),
-        Container(
-            margin: const EdgeInsets.fromLTRB(27, 30, 0, 0),
-            width: 130,
-            child: Text(
-              "$_difficulty Level",
-              textAlign: TextAlign.left,
-              style: const TextStyle(
-                  fontFamily: "MadimiOne",
-                  fontSize: 20,
-                  color: Colors.white,
-                  shadows: shadows),
-            )),
+
         Container(
             margin: const EdgeInsets.fromLTRB(27, 55, 0, 0),
             width: 130,
@@ -655,7 +645,19 @@ class _GameState extends State<Game> {
                       card: card,
                       onTap: _enableTaps ? _handleTap : null,
                     ))
-                .toList())
+                .toList()),
+        Container(
+            alignment: Alignment.bottomCenter,
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            child: Text(
+              "Flips: $_flips",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: SizeConfig.fontSize * 2.5,
+                  color: Colors.white,
+                  shadows: shadows),
+            )),
       ]),
     );
   }
