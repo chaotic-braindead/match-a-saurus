@@ -448,7 +448,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 onPressed: () {
                   // Redirect to leaderboard
-                  Navigator.pushReplacement(
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => Leaderboard(score: 0)));

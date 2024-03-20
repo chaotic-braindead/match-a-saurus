@@ -77,6 +77,7 @@ class _LeaderboardState extends State<Leaderboard> {
           clipBehavior: Clip.none,
           children: [
             AppBar(
+                automaticallyImplyLeading: false,
                 toolbarHeight: 80,
                 titleSpacing: 20,
                 title: Image.asset(
@@ -203,10 +204,7 @@ class _LeaderboardState extends State<Leaderboard> {
                           width: 70,
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HomePage()));
+                              Navigator.pop(context);
                             },
                             child: const Text(
                               "",
@@ -238,5 +236,4 @@ class _LeaderboardState extends State<Leaderboard> {
       ),
     ));
   }
-
 }

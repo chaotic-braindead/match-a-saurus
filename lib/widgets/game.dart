@@ -437,8 +437,7 @@ class _GameState extends State<Game> {
                           width: SizeConfig.safeBlockHorizontal * 50,
                           child: ElevatedButton(
                               onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
