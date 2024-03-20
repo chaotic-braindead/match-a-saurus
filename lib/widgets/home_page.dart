@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
     if (timer != null) {
       _timer = timer;
     } else {
-      Database.optionsBox?.put("difficulty", timerList[1]);
+      Database.optionsBox?.put("timer", timerList[1]);
     }
   }
 
