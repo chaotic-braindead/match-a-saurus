@@ -201,12 +201,8 @@ class _LeaderboardState extends State<Leaderboard> {
                         child: SizedBox(
                           height: 70,
                           width: 70,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                elevation: 0.0,
-                                backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                                animationDuration: Duration()),
-                            onPressed: () {
+                          child: GestureDetector(
+                            onTap: () {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -243,121 +239,4 @@ class _LeaderboardState extends State<Leaderboard> {
     ));
   }
 
-  Stack _buildLeaderboard(BuildContext context) {
-    return Stack(children: [
-      AlertDialog(
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Color.fromARGB(0, 179, 25, 25),
-        content: SizedBox(
-            width: 999,
-            child: Container(
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/rectangle-bg.png"),
-                        fit: BoxFit.fill)),
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListView(
-                        padding: EdgeInsets.fromLTRB(
-                            SizeConfig.blockSizeHorizontal * 6.25,
-                            SizeConfig.blockSizeVertical * 6,
-                            SizeConfig.blockSizeHorizontal * 7.5,
-                            0),
-                        children: [
-                            Column(children: _scores),
-                            Row(children: [
-                              Text("Personal Best",
-                                  style: TextStyle(
-                                      fontSize: SizeConfig.fontSize * 2.35,
-                                      fontFamily: "MadimiOne",
-                                      color: const Color.fromRGBO(
-                                          69, 141, 67, 1))),
-                              const Spacer(),
-                              Text((_pb?.score!).toString(),
-                                  style: TextStyle(
-                                      fontSize: SizeConfig.fontSize * 2.35,
-                                      fontFamily: "MadimiOne",
-                                      color: const Color.fromRGBO(
-                                          147, 123, 107, 1)))
-                            ])
-                          ]))),
-      ),
-      Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.fromLTRB(
-              SizeConfig.safeBlockHorizontal * 15,
-              SizeConfig.safeBlockVertical * 0,
-              SizeConfig.safeBlockHorizontal * 15,
-              0),
-          child: ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                      const Color.fromRGBO(190, 255, 188, 1)),
-                  minimumSize: MaterialStateProperty.all(const Size(65, 65)),
-                  shape: MaterialStateProperty.all(const CircleBorder(
-                      side: BorderSide(
-                          width: 4, color: Color.fromRGBO(36, 107, 34, 1))))),
-              onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const HomePage()));
-              },
-              child: Text(
-                "X",
-                style: TextStyle(
-                    color: const Color.fromRGBO(36, 107, 34, 1),
-                    fontFamily: "MadimiOne",
-                    fontSize: 3.25 * SizeConfig.fontSize,
-                    shadows: const [
-                      Shadow(
-                          // bottomLeft
-                          offset: Offset(2.5, 3),
-                          color: Color.fromRGBO(255, 221, 83, 1)),
-                    ]),
-              ))),
-      Container(
-          margin: EdgeInsets.fromLTRB(
-              SizeConfig.safeBlockHorizontal * 25,
-              SizeConfig.safeBlockVertical * 5,
-              SizeConfig.safeBlockHorizontal * 15,
-              0),
-          child: DefaultTextStyle(
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: "MadimiOne",
-                height: 0.65,
-                fontSize: 4.5 * SizeConfig.fontSize,
-                color: Colors.white,
-                shadows: const [
-                  Shadow(
-                      offset: Offset(5.75, 6.25),
-                      color: Color.fromRGBO(255, 188, 152, 1)),
-                  Shadow(
-                      // bottomLeft
-                      offset: Offset(-2.5, -2.5),
-                      color: Color.fromRGBO(29, 103, 27, 1)),
-                  Shadow(
-                      // bottomRight
-                      offset: Offset(2.5, -2.5),
-                      color: Color.fromRGBO(29, 103, 27, 1)),
-                  Shadow(
-                      // topRight
-                      offset: Offset(2.5, 2.5),
-                      color: Color.fromRGBO(29, 103, 27, 1)),
-                  Shadow(
-                      // topLeft
-                      offset: Offset(-2.5, 2.5),
-                      color: Color.fromRGBO(29, 103, 27, 1)),
-                ]),
-            child: const Text("high scores"),
-          )),
-      Container(
-          margin: EdgeInsets.fromLTRB(SizeConfig.screenWidth - (50 * 2),
-              SizeConfig.screenHeight - (95 * 2), 0, 0),
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-            scale: 7,
-            image: AssetImage("assets/logo-dino.png"),
-          )))
-    ]);
-  }
 }
