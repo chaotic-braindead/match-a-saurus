@@ -214,33 +214,22 @@ class _HomePageState extends State<HomePage> {
               Container(
                   alignment: Alignment.center,
                   margin: const EdgeInsets.fromLTRB(0, 295, 0, 0),
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              const Color.fromRGBO(190, 255, 188, 1)),
-                          minimumSize:
-                              MaterialStateProperty.all(const Size(65, 65)),
-                          shape: MaterialStateProperty.all(const CircleBorder(
-                              side: BorderSide(
-                                  width: 4,
-                                  color: Color.fromRGBO(36, 107, 34, 1))))),
-                      onPressed: () {
-                        _updateCurrentPlayer(
-                            Player(name: _playerController.text));
-                      },
-                      child: Text(
-                        "✓",
-                        style: TextStyle(
-                            color: const Color.fromRGBO(36, 107, 34, 1),
-                            fontFamily: "MadimiOne",
-                            fontSize: 3.25 * SizeConfig.fontSize,
-                            shadows: const [
-                              Shadow(
-                                  // bottomLeft
-                                  offset: Offset(2.5, 3),
-                                  color: Color.fromRGBO(255, 221, 83, 1)),
-                            ]),
-                      ))),
+                  child: IconButton(
+                    icon: Icon(Icons.check),
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            const Color.fromRGBO(190, 255, 188, 1)),
+                        minimumSize:
+                            MaterialStateProperty.all(const Size(65, 65)),
+                        shape: MaterialStateProperty.all(const CircleBorder(
+                            side: BorderSide(
+                                width: 4,
+                                color: Color.fromRGBO(36, 107, 34, 1))))),
+                    onPressed: () {
+                      _updateCurrentPlayer(
+                          Player(name: _playerController.text));
+                    },
+                  )),
               Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:memory_game/db/db.dart';
@@ -650,17 +651,35 @@ class _GameState extends State<Game> {
                     ))
                 .toList()),
         Container(
-            alignment: Alignment.bottomCenter,
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: Text(
-              "Flips: $_flips",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: "MadimiOne",
-                  fontSize: SizeConfig.fontSize * 2.5,
-                  color: Colors.white,
-                  shadows: shadows),
-            )),
+          alignment: Alignment.bottomCenter,
+          margin: EdgeInsets.fromLTRB(
+              0,
+              0,
+              0,
+              (_multiplier == 1)
+                  ? 5
+                  : (_multiplier == 1.25)
+                      ? 25
+                      : 10),
+          child: Container(
+              width: 130,
+              height: 32,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  border:
+                      Border.all(color: const Color.fromRGBO(72, 132, 76, 1)),
+                  color: const Color.fromRGBO(112, 204, 118, 1),
+                  borderRadius: BorderRadius.circular(40)),
+              child: Text(
+                "Flips: $_flips",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: "MadimiOne",
+                    fontSize: SizeConfig.fontSize * 2.25,
+                    color: Colors.white,
+                    shadows: shadows),
+              )),
+        )
       ]),
     );
   }
