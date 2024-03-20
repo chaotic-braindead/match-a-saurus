@@ -86,12 +86,11 @@ class _LeaderboardState extends State<Leaderboard> {
                 ),
                 backgroundColor: Colors.transparent),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20),
               child: SizedBox(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight,
                 child: Container(
-                  margin: const EdgeInsets.only(bottom: 45, top: 110),
+                  margin:
+                      EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 25),
                   decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage("assets/leaderboard.png"))),
@@ -102,12 +101,12 @@ class _LeaderboardState extends State<Leaderboard> {
                           : ListView.separated(
                               padding: EdgeInsets.fromLTRB(
                                   SizeConfig.blockSizeHorizontal * 16.25,
-                                  SizeConfig.blockSizeVertical * 13.5,
+                                  SizeConfig.blockSizeVertical * 18.75,
                                   SizeConfig.blockSizeHorizontal * 17.5,
                                   0),
                               itemCount: _scores.length,
                               separatorBuilder: (context, index) =>
-                                  const SizedBox(height: 5),
+                                  const SizedBox(height: 3),
                               itemBuilder: (context, index) {
                                 if (_scores[index].player.score! == 0) {
                                   return Container();
@@ -124,9 +123,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                               ? _scores[index].player.name
                                               : "You",
                                           style: TextStyle(
-                                            fontSize: index != 10
-                                                ? SizeConfig.fontSize * 2.35
-                                                : SizeConfig.fontSize * 2.75,
+                                            fontSize: index != 10 ? 18 : 20,
                                             fontFamily: 'MadimiOne',
                                             fontWeight: index != 10
                                                 ? FontWeight.normal
@@ -141,9 +138,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                               .score
                                               .toString(),
                                           style: TextStyle(
-                                            fontSize: index != 10
-                                                ? SizeConfig.fontSize * 2.35
-                                                : SizeConfig.fontSize * 2.75,
+                                            fontSize: index != 10 ? 17 : 19,
                                             fontFamily: 'MadimiOne',
                                             fontWeight: index != 10
                                                 ? FontWeight.normal
@@ -169,24 +164,18 @@ class _LeaderboardState extends State<Leaderboard> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: (Row(children: [
-                                                Text("Personal Best:",
+                                                const Text("Personal Best:",
                                                     style: TextStyle(
-                                                        fontSize: SizeConfig
-                                                                .fontSize *
-                                                            2.7,
+                                                        fontSize: 17,
                                                         fontFamily: "MadimiOne",
-                                                        color: const Color
-                                                            .fromRGBO(
+                                                        color: Color.fromRGBO(
                                                             69, 141, 67, 1))),
                                                 const Spacer(),
                                                 Text((_pb?.score!).toString(),
-                                                    style: TextStyle(
-                                                        fontSize: SizeConfig
-                                                                .fontSize *
-                                                            2.7,
+                                                    style: const TextStyle(
+                                                        fontSize: 18,
                                                         fontFamily: "MadimiOne",
-                                                        color: const Color
-                                                            .fromRGBO(
+                                                        color: Color.fromRGBO(
                                                             147, 123, 107, 1)))
                                               ])),
                                             ),

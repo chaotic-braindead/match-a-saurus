@@ -621,9 +621,9 @@ class _GameState extends State<Game> {
             child: Text(
               "${_difficulty!.split(" ")[0]} Level",
               textAlign: TextAlign.left,
-              style: const TextStyle(
+              style: TextStyle(
                   fontFamily: "MadimiOne",
-                  fontSize: 20,
+                  fontSize: SizeConfig.fontSize * 2.15,
                   color: Colors.white,
                   shadows: shadows),
             )),
@@ -638,32 +638,24 @@ class _GameState extends State<Game> {
                   fontSize: 12,
                   color: Color.fromRGBO(117, 187, 115, 1)),
             )),
-        GridView.count(
-            padding: const EdgeInsets.fromLTRB(20, 145, 20, 20),
-            childAspectRatio: _rows == 6 ? 0.8 : 0.93,
-            crossAxisCount: _rows,
-            mainAxisSpacing: _rows == 6 ? 20.0 : 5.0,
-            crossAxisSpacing: _rows == 6 ? 10.0 : 10.0,
-            children: _cards
-                .map((card) => CardWidget(
-                      card: card,
-                      onTap: _enableTaps ? _handleTap : null,
-                    ))
-                .toList()),
-        Container(
-          alignment: Alignment.bottomCenter,
-          margin: EdgeInsets.fromLTRB(
-              0,
-              0,
-              0,
-              (_multiplier == 1)
-                  ? 5
-                  : (_multiplier == 1.25)
-                      ? 25
-                      : 10),
-          child: Container(
+        Column(mainAxisSize: MainAxisSize.min, children: [
+          GridView.count(
+              shrinkWrap: true,
+              padding: const EdgeInsets.fromLTRB(20, 145, 20, 0),
+              childAspectRatio: _rows == 6 ? 0.8 : 0.93,
+              crossAxisCount: _rows,
+              mainAxisSpacing: _rows == 6 ? 20.0 : 5.0,
+              crossAxisSpacing: _rows == 6 ? 10.0 : 10.0,
+              children: _cards
+                  .map((card) => CardWidget(
+                        card: card,
+                        onTap: _enableTaps ? _handleTap : null,
+                      ))
+                  .toList()),
+          SizedBox(height: SizeConfig.blockSizeVertical),
+          Container(
               width: 130,
-              height: 32,
+              height: 30,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   border:
@@ -675,11 +667,13 @@ class _GameState extends State<Game> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: "MadimiOne",
-                    fontSize: SizeConfig.fontSize * 2.25,
+                    fontSize: _multiplier == 1
+                        ? SizeConfig.fontSize * 2
+                        : SizeConfig.fontSize * 2.25,
                     color: Colors.white,
                     shadows: shadows),
-              )),
-        )
+              ))
+        ])
       ]),
     );
   }

@@ -105,35 +105,30 @@ class _HomePageState extends State<HomePage> {
                                             color: const Color.fromRGBO(
                                                 69, 141, 67, 1)),
                                       ),
-                                      SizedBox(
-                                          width: 100,
-                                          child: DropdownButton<String>(
-                                              elevation: 0,
-                                              dropdownColor:
-                                                  const Color.fromRGBO(
-                                                      252, 211, 184, 1),
-                                              value: _difficulty,
-                                              onChanged: (value) async {
-                                                await Database.optionsBox
-                                                    ?.put("difficulty", value!);
-                                                setState(
-                                                    () => _difficulty = value!);
-                                              },
-                                              items:
-                                                  difficultyList.map((value) {
-                                                return DropdownMenuItem(
-                                                    value: value,
-                                                    child: Text(value,
-                                                        style: TextStyle(
-                                                            fontSize: SizeConfig
-                                                                    .fontSize *
-                                                                1.5,
-                                                            fontFamily:
-                                                                "MadimiOne",
-                                                            color: const Color
-                                                                .fromRGBO(147,
-                                                                123, 107, 1))));
-                                              }).toList()))
+                                      DropdownButton<String>(
+                                          elevation: 0,
+                                          dropdownColor: const Color.fromRGBO(
+                                              252, 211, 184, 1),
+                                          value: _difficulty,
+                                          onChanged: (value) async {
+                                            await Database.optionsBox
+                                                ?.put("difficulty", value!);
+                                            setState(
+                                                () => _difficulty = value!);
+                                          },
+                                          items: difficultyList.map((value) {
+                                            return DropdownMenuItem(
+                                                value: value,
+                                                child: Text(value,
+                                                    style: TextStyle(
+                                                        fontSize: SizeConfig
+                                                                .fontSize *
+                                                            1.5,
+                                                        fontFamily: "MadimiOne",
+                                                        color: const Color
+                                                            .fromRGBO(147, 123,
+                                                            107, 1))));
+                                          }).toList())
                                     ]),
                                 Row(
                                     mainAxisAlignment:
@@ -149,33 +144,29 @@ class _HomePageState extends State<HomePage> {
                                             color: const Color.fromRGBO(
                                                 69, 141, 67, 1)),
                                       ),
-                                      SizedBox(
-                                          width: 100,
-                                          child: DropdownButton<String>(
-                                              elevation: 0,
-                                              dropdownColor:
-                                                  const Color.fromRGBO(
-                                                      252, 211, 184, 1),
-                                              value: _timer,
-                                              onChanged: (value) async {
-                                                await Database.optionsBox
-                                                    ?.put("timer", value!);
-                                                setState(() => _timer = value!);
-                                              },
-                                              items: timerList.map((value) {
-                                                return DropdownMenuItem(
-                                                    value: value,
-                                                    child: Text(value,
-                                                        style: TextStyle(
-                                                            fontSize: SizeConfig
-                                                                    .fontSize *
-                                                                1.5,
-                                                            fontFamily:
-                                                                "MadimiOne",
-                                                            color: const Color
-                                                                .fromRGBO(147,
-                                                                123, 107, 1))));
-                                              }).toList()))
+                                      DropdownButton<String>(
+                                          elevation: 0,
+                                          dropdownColor: const Color.fromRGBO(
+                                              252, 211, 184, 1),
+                                          value: _timer,
+                                          onChanged: (value) async {
+                                            await Database.optionsBox
+                                                ?.put("timer", value!);
+                                            setState(() => _timer = value!);
+                                          },
+                                          items: timerList.map((value) {
+                                            return DropdownMenuItem(
+                                                value: value,
+                                                child: Text(value,
+                                                    style: TextStyle(
+                                                        fontSize: SizeConfig
+                                                                .fontSize *
+                                                            1.5,
+                                                        fontFamily: "MadimiOne",
+                                                        color: const Color
+                                                            .fromRGBO(147, 123,
+                                                            107, 1))));
+                                          }).toList())
                                     ]),
                                 Row(
                                     mainAxisAlignment:

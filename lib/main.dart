@@ -28,10 +28,11 @@ class MemoryGame extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig.init(context);
     return MaterialApp(
-      title: 'Memory Game',
+      title: 'match a saurus',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromRGBO(118, 251, 116, 1)),
         useMaterial3: true,
       ),
       home: const HomePage(),
