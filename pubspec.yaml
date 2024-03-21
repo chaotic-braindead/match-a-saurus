@@ -53,6 +53,25 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
   build_runner: any
+  flutter_launcher_icons: "^0.13.1"
+  
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo-dino.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/logo-dino.png"
+    background_color: "#dbf2d3"
+    theme_color: "#dbf2d3"
+  windows:
+    generate: true
+    image_path: assets/logo-dino.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/logo-dino.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,6 +89,8 @@ flutter:
     - assets/
     - assets/cards/
     - assets/homescreen/
+    - assets/realdinos/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
