@@ -582,16 +582,17 @@ class _GameState extends State<Game> {
                       image: AssetImage("assets/score-bg.png"))),
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text(
-                    _score.toString(),
-                    style: const TextStyle(
-                        fontFamily: "MadimiOne",
-                        fontSize: 35,
-                        color: Colors.white,
-                        shadows: shadows),
-                  ),
-                ),
+                    padding: const EdgeInsets.only(top: 10),
+                    child: FittedBox(
+                      child: Text(
+                        _score.toString(),
+                        style: const TextStyle(
+                            fontFamily: "MadimiOne",
+                            fontSize: 27,
+                            color: Colors.white,
+                            shadows: shadows),
+                      ),
+                    )),
               ),
             ),
           ),
@@ -631,13 +632,16 @@ class _GameState extends State<Game> {
         Container(
             margin: const EdgeInsets.fromLTRB(27, 55, 0, 0),
             width: 130,
-            child: Text(
-              "Your high score: $_bestScore",
-              style: const TextStyle(
-                  fontFamily: "MadimiOne",
-                  fontSize: 12,
-                  color: Color.fromRGBO(117, 187, 115, 1)),
-            )),
+            child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Your high score: $_bestScore",
+                  style: const TextStyle(
+                      fontFamily: "MadimiOne",
+                      fontSize: 12,
+                      color: Color.fromRGBO(117, 187, 115, 1)),
+                ))),
         Column(mainAxisSize: MainAxisSize.min, children: [
           GridView.count(
               shrinkWrap: true,
