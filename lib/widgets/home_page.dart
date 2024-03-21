@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                             fontSize:
-                                                SizeConfig.fontSize * 1.75,
+                                                SizeConfig.fontSize * 2,
                                             fontFamily: "MadimiOne",
                                             color: const Color.fromRGBO(
                                                 69, 141, 67, 1)),
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                                                     style: TextStyle(
                                                         fontSize: SizeConfig
                                                                 .fontSize *
-                                                            1.5,
+                                                            1.8,
                                                         fontFamily: "MadimiOne",
                                                         color: const Color
                                                             .fromRGBO(147, 123,
@@ -132,14 +132,14 @@ class _HomePageState extends State<HomePage> {
                                     ]),
                                 Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                        MainAxisAlignment.spaceAround,
                                     children: [
                                       Text(
                                         "Timer",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                             fontSize:
-                                                SizeConfig.fontSize * 1.75,
+                                                SizeConfig.fontSize * 2,
                                             fontFamily: "MadimiOne",
                                             color: const Color.fromRGBO(
                                                 69, 141, 67, 1)),
@@ -161,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                                                     style: TextStyle(
                                                         fontSize: SizeConfig
                                                                 .fontSize *
-                                                            1.5,
+                                                            1.8,
                                                         fontFamily: "MadimiOne",
                                                         color: const Color
                                                             .fromRGBO(147, 123,
@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                                         "Playing as",
                                         style: TextStyle(
                                             fontSize:
-                                                SizeConfig.fontSize * 1.75,
+                                                SizeConfig.fontSize * 2,
                                             fontFamily: "MadimiOne",
                                             color: const Color.fromRGBO(
                                                 69, 141, 67, 1)),
@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                                           child: TextField(
                                             style: TextStyle(
                                                 fontSize:
-                                                    SizeConfig.fontSize * 1.5,
+                                                    SizeConfig.fontSize * 1.8,
                                                 fontFamily: "MadimiOne",
                                                 color: const Color.fromRGBO(
                                                     147, 123, 107, 1)),
