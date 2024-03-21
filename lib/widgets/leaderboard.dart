@@ -186,11 +186,11 @@ class _LeaderboardState extends State<Leaderboard> {
                               },
                             )),
                       Positioned(
-                        bottom: SizeConfig.blockSizeHorizontal + 10,
-                        left: (SizeConfig.screenWidth / 2) - 70 * 0.75,
+                        bottom: SizeConfig.blockSizeHorizontal + 40,
+                        left: (SizeConfig.screenWidth / 2) - 80 * 0.75,
                         child: SizedBox(
-                          height: 70,
-                          width: 70,
+                          height: 90,
+                          width: 90,
                           child: GestureDetector(
                             onTap: () {
                               Navigator.pop(context);

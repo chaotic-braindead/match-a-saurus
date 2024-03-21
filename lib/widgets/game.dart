@@ -645,11 +645,11 @@ class _GameState extends State<Game> {
         Column(mainAxisSize: MainAxisSize.min, children: [
           GridView.count(
               shrinkWrap: true,
-              padding: const EdgeInsets.fromLTRB(20, 145, 20, 0),
-              childAspectRatio: _rows == 6 ? 0.8 : 0.93,
+              padding: _rows == 3 ? EdgeInsets.fromLTRB(40, 145, 40, 0): EdgeInsets.fromLTRB(25, 145, 25, 0),
+              childAspectRatio: _rows == 6 ? 0.78 : 0.93,
               crossAxisCount: _rows,
-              mainAxisSpacing: _rows == 6 ? 20.0 : 5.0,
-              crossAxisSpacing: _rows == 6 ? 10.0 : 10.0,
+              mainAxisSpacing: _rows == 6 ? 5.0 : 5.0,
+              crossAxisSpacing: _rows == 6 ? 8.0 : 10.0,
               children: _cards
                   .map((card) => CardWidget(
                         card: card,
@@ -660,6 +660,7 @@ class _GameState extends State<Game> {
           Container(
               width: 130,
               height: 30,
+              margin: const EdgeInsets.fromLTRB(2, 20, 2, 2),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   border:
