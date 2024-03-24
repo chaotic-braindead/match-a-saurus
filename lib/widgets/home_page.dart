@@ -9,6 +9,7 @@ import 'package:memory_game/widgets/leaderboard.dart';
 import 'package:memory_game/widgets/card_catalog.dart';
 import 'package:memory_game/utils/size_config.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:memory_game/widgets/manual.dart';
 
 bool isPaused = false;
 
@@ -22,7 +23,6 @@ final List<String> timerList = <String>[
   '30 seconds',
   '1 minute',
   '2 minutes',
-  '3 minutes'
 ];
 
 class HomePage extends StatefulWidget { 
@@ -293,7 +293,17 @@ class _HomePageState extends State<HomePage> {
             image: DecorationImage(
                 image: AssetImage("assets/bg-2.png"), fit: BoxFit.cover)),
         child: Stack(children: [
-          _musicBtn(),
+          Container(
+            padding: const  EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                  _musicBtn(),
+                  _helpBtn()
+              ],
+            ),
+          ),
+          
           Center(
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               _homeTitle(),
@@ -513,7 +523,7 @@ class _HomePageState extends State<HomePage> {
       child: Container(
               height: 50,
               width: 50,
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              //margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               decoration: BoxDecoration(
                   border: Border.all(color: darkGreen, width: 3.0),
                   borderRadius: BorderRadius.circular(50),
@@ -542,6 +552,31 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             )
+    );
+  }
+
+  SizedBox _helpBtn(){
+    return SizedBox(
+      child: Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Color.fromARGB(255, 134, 177, 138), width: 3.0),
+                  borderRadius: BorderRadius.circular(50),
+                  //color: Color.fromARGB(255, 238, 255, 241),
+                  ),
+              child: IconButton(
+                icon: const Icon(Icons.question_mark),
+                color: Color.fromARGB(255, 134, 177, 138),
+                iconSize: 25,
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Manual(audioPlayer: widget.audioPlayer,)));
+                },
+              ),
+            ),
     );
   }
   

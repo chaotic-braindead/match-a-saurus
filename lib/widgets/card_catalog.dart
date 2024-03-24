@@ -224,7 +224,7 @@ class _CardCatalogState extends State<CardCatalog> {
 
                 // 2nd Row: horizontal card display
                 Expanded(
-                  flex: 23,
+                  flex: 25,
                   child: Container(
                     margin: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 10),

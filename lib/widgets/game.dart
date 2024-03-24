@@ -57,6 +57,7 @@ class _GameState extends State<Game> {
   late Player? _pb;
   late String? _difficulty;
   late double _multiplier;
+  late double _divider;
   bool _enableTaps = true;
 
   late double deviceWidth;
@@ -98,7 +99,13 @@ class _GameState extends State<Game> {
     int time = int.parse(timerOption!);
     if (time > 3) {
       _startTimer(time);
+      _divider = 0.2;
     } else {
+      if(time == 1){
+        _divider = 1.5;
+      } else {
+        _divider = 2.75;
+      }
       _startTimer(time * 60);
     }
   }
@@ -186,10 +193,8 @@ class _GameState extends State<Game> {
 
     if (_tappedCard?.val == card.val) {
       setState(() {
-        _score += (_counter > 60)
-            ? (_counter / (_multiplier * 2.25)).truncate()
-            : _counter;
-        _score = (_score * _multiplier).truncate();
+        _score += ((_counter / _divider)*_multiplier).truncate();
+        //_score = (_score * _multiplier).truncate();
         _validPairs.add(_tappedCard!);
         _validPairs.add(card);
         _tappedCard = null;
