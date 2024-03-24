@@ -29,7 +29,7 @@ class _CardWidgetState extends State<CardWidget> {
             image: AssetImage((widget.card.isTapped) ? widget.card.val : "assets/logo-card.png"),
             fit: BoxFit.contain
           ),
-          color: const Color.fromRGBO(69, 141, 67, 1)
+          color: const Color.fromARGB(255, 70, 140, 71)
         ),
       ),
     );

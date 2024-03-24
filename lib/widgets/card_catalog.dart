@@ -1,3 +1,5 @@
+import 'package:audioplayers/src/audioplayer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_game/widgets/home_page.dart';
 
@@ -7,7 +9,8 @@ const Color darkGreen = Color.fromARGB(255, 70, 140, 71),
     lightPink = Color.fromARGB(255, 255, 175, 151);
 
 class CardCatalog extends StatefulWidget {
-  const CardCatalog({super.key});
+  final AudioPlayer audioPlayer;
+  const CardCatalog({super.key, required this.audioPlayer});
   @override
   State<CardCatalog> createState() => _CardCatalogState();
 }
@@ -143,6 +146,8 @@ class _CardCatalogState extends State<CardCatalog> {
       0; // set first card as default card when opening card catalog
   final int _itemCount = 18; // total number of unique dino cards
 
+  
+
   void _handleCardTap(int index) {
     setState(() {
       _selectedIndex = index;
@@ -182,7 +187,7 @@ class _CardCatalogState extends State<CardCatalog> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const HomePage()));
+                          builder: (context) => HomePage(audioPlayer: widget.audioPlayer,)));
                 },
               ),
             )
@@ -219,7 +224,7 @@ class _CardCatalogState extends State<CardCatalog> {
 
                 // 2nd Row: horizontal card display
                 Expanded(
-                  flex: 23,
+                  flex: 25,
                   child: Container(
                     margin: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 10),
@@ -336,12 +341,54 @@ class _CardCatalogState extends State<CardCatalog> {
                 ),
               ],
             ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: _musicBtn(),
+            )
           ],
         ),
       ),
     );
   }
-}
+
+  SizedBox _musicBtn() {
+    return SizedBox(
+     
+      child: Container(
+              height: 35,
+              width: 35,
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                  border: Border.all(color: darkGreen, width: 2.0),
+                  borderRadius: BorderRadius.circular(50),
+                  color: lightGreen1,
+                  boxShadow: [
+                    BoxShadow(
+                      color: lightPink.withOpacity(1),
+                      offset: const Offset(1.85, 3),
+                    )
+                  ]),
+              child: Center(
+                child: IconButton(
+                  icon: isPaused ? const Icon(Icons.music_off_outlined) : const Icon(Icons.music_note),
+                  color: darkGreen,
+                  iconSize: 15,
+                  onPressed: () {
+                    if (isPaused) {
+                      widget.audioPlayer.resume();
+                    } else {
+                      widget.audioPlayer.pause();
+                    }
+                    setState(() {
+                      isPaused = !isPaused;
+                    });
+                  },
+                ),
+              ),
+            )
+    );
+  }
 
 Widget buildRichText(String label, String detail) {
   return RichText(
@@ -365,4 +412,9 @@ Widget buildRichText(String label, String detail) {
       ],
     ),
   );
+
+
+
+  
+}
 }
