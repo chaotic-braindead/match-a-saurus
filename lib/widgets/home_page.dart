@@ -31,22 +31,9 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.audioPlayer});
   @override
   State<HomePage> createState() => _HomePageState();
-
-  /*static bool isPaused(BuildContext context) {
-    final state = context.findAncestorStateOfType<_HomePageState>();
-    return state?.isPaused ?? false;
-  }*/
 }
 
 class _HomePageState extends State<HomePage> {
-  /*static bool _isPaused = false;
-
-  static void setPaused(bool isPaused) {
-    _isPaused = isPaused;
-  }
-
-  bool get isPaused => _isPaused;*/
-
   late Player? currentPlayer;
   late TextEditingController _playerController;
   String _difficulty = difficultyList.first;
@@ -61,8 +48,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    
-
     super.initState();
     setState(() => currentPlayer = Database.playerBox
         ?.get("currentPlayer", defaultValue: Player(name: "Guest")));
@@ -295,210 +280,216 @@ class _HomePageState extends State<HomePage> {
         child: Stack(children: [
           Container(
             padding: const  EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                  _musicBtn(),
-                  _helpBtn()
-              ],
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                    _musicBtn(),
+                    _helpBtn()
+                ],
+              ),
             ),
           ),
           
           Center(
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              _homeTitle(),
-              Column(
-                children: [
-                  SizedBox(
-                    width: 185,
-                    height: 140,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage("assets/logo-dino.png"),
-                              fit: BoxFit.cover)),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0,25,0,0),
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                _homeTitle(),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 185,
+                      height: 140,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage("assets/logo-dino.png"),
+                                fit: BoxFit.cover)),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 250,
-                    height: 50,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            side: BorderSide(
-                                width: 5.0,
-                                color: Color.fromRGBO(36, 107, 34, 1)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0))),
-                        child: const Text(
-                          "PLAY",
-                          style: TextStyle(
-                            fontSize: 29,
-                            fontFamily: 'MadimiOne',
-                            color: Color.fromRGBO(36, 107, 34, 1),
-                            shadows: [
-                              Shadow(
-                                // Adjust offsets and blurRadius for stroke thickness
-                                offset: Offset(
-                                    3.0, 3.0), // Adjust for stroke position
-                                blurRadius: 2.0,
-                                color: Color.fromRGBO(
-                                    255, 220, 80, 1), // Set your stroke color
-                              ),
-                            ],
+                    SizedBox(
+                      width: 250,
+                      height: 50,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              side: BorderSide(
+                                  width: 5.0,
+                                  color: Color.fromRGBO(36, 107, 34, 1)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0))),
+                          child: const Text(
+                            "PLAY",
+                            style: TextStyle(
+                              fontSize: 29,
+                              fontFamily: 'MadimiOne',
+                              color: Color.fromRGBO(36, 107, 34, 1),
+                              shadows: [
+                                Shadow(
+                                  // Adjust offsets and blurRadius for stroke thickness
+                                  offset: Offset(
+                                      3.0, 3.0), // Adjust for stroke position
+                                  blurRadius: 2.0,
+                                  color: Color.fromRGBO(
+                                      255, 220, 80, 1), // Set your stroke color
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Game(audioPlayer: widget.audioPlayer)));
-                        }),
-                  ),
-                  SizedBox(height: 15),
-                  SizedBox(
-                    width: 250,
-                    height: 50,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            side: BorderSide(
-                                width: 5.0,
-                                color: Color.fromRGBO(36, 107, 34, 1)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0))),
-                        child: const Text(
-                          "OPTIONS",
-                          style: TextStyle(
-                            fontSize: 29,
-                            fontFamily: 'MadimiOne',
-                            color: Color.fromRGBO(36, 107, 34, 1),
-                            shadows: [
-                              Shadow(
-                                // Adjust offsets and blurRadius for stroke thickness
-                                offset: Offset(
-                                    3.0, 3.0), // Adjust for stroke position
-                                blurRadius: 2.0,
-                                color: Color.fromRGBO(
-                                    255, 220, 80, 1), // Set your stroke color
-                              ),
-                            ],
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Game(audioPlayer: widget.audioPlayer)));
+                          }),
+                    ),
+                    SizedBox(height: 15),
+                    SizedBox(
+                      width: 250,
+                      height: 50,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              side: BorderSide(
+                                  width: 5.0,
+                                  color: Color.fromRGBO(36, 107, 34, 1)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0))),
+                          child: const Text(
+                            "OPTIONS",
+                            style: TextStyle(
+                              fontSize: 29,
+                              fontFamily: 'MadimiOne',
+                              color: Color.fromRGBO(36, 107, 34, 1),
+                              shadows: [
+                                Shadow(
+                                  // Adjust offsets and blurRadius for stroke thickness
+                                  offset: Offset(
+                                      3.0, 3.0), // Adjust for stroke position
+                                  blurRadius: 2.0,
+                                  color: Color.fromRGBO(
+                                      255, 220, 80, 1), // Set your stroke color
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) =>
-                                _buildOptionsDialog(context),
-                          );
-                        }),
-                  ),
-                ],
-              ),
-              SizedBox(height: 15),
-              SizedBox(
-                width: 250,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      side: BorderSide(
-                          width: 5.0, color: Color.fromRGBO(36, 107, 34, 1)),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0))),
-                  child: const Text(
-                    "CARD CATALOG",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontFamily: 'MadimiOne',
-                      color: Color.fromRGBO(36, 107, 34, 1),
-                      shadows: [
-                        Shadow(
-                          // Adjust offsets and blurRadius for stroke thickness
-                          offset: Offset(3.0, 3.0), // Adjust for stroke position
-                          blurRadius: 2.0,
-                          color: Color.fromRGBO(
-                              255, 220, 80, 1), // Set your stroke color
-                        ),
-                      ],
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) =>
+                                  _buildOptionsDialog(context),
+                            );
+                          }),
                     ),
-                  ),
-                  onPressed: () {
-                    // Redirect to card catalog
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CardCatalog(audioPlayer: widget.audioPlayer)));
-                  },
+                  ],
                 ),
-              ),
-              SizedBox(height: 15),
-              SizedBox(
-                width: 250,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      side: BorderSide(
-                          width: 5.0, color: Color.fromRGBO(36, 107, 34, 1)),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0))),
-                  child: const Text(
-                    "VIEW HIGH SCORES",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontFamily: 'MadimiOne',
-                      color: Color.fromRGBO(36, 107, 34, 1),
-                      shadows: [
-                        Shadow(
-                          // Adjust offsets and blurRadius for stroke thickness
-                          offset: Offset(3.0, 3.0), // Adjust for stroke position
-                          blurRadius: 2.0,
-                          color: Color.fromRGBO(
-                              255, 220, 80, 1), // Set your stroke color
-                        ),
-                      ],
+                SizedBox(height: 15),
+                SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        side: BorderSide(
+                            width: 5.0, color: Color.fromRGBO(36, 107, 34, 1)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0))),
+                    child: const Text(
+                      "CARD CATALOG",
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontFamily: 'MadimiOne',
+                        color: Color.fromRGBO(36, 107, 34, 1),
+                        shadows: [
+                          Shadow(
+                            // Adjust offsets and blurRadius for stroke thickness
+                            offset: Offset(3.0, 3.0), // Adjust for stroke position
+                            blurRadius: 2.0,
+                            color: Color.fromRGBO(
+                                255, 220, 80, 1), // Set your stroke color
+                          ),
+                        ],
+                      ),
                     ),
+                    onPressed: () {
+                      // Redirect to card catalog
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CardCatalog(audioPlayer: widget.audioPlayer)));
+                    },
                   ),
-                  onPressed: () {
-                    // Redirect to leaderboard
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Leaderboard(score: 0)));
-                  },
                 ),
-              ),
-              SizedBox(height: 15),
-              SizedBox(
-                width: 250,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      side: BorderSide(
-                          width: 5.0, color: Color.fromRGBO(36, 107, 34, 1)),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0))),
-                  child: const Text(
-                    "EXIT",
-                    style: TextStyle(
-                      fontSize: 29,
-                      fontFamily: 'MadimiOne',
-                      color: Color.fromRGBO(36, 107, 34, 1),
-                      shadows: [
-                        Shadow(
-                          // Adjust offsets and blurRadius for stroke thickness
-                          offset: Offset(3.0, 3.0), // Adjust for stroke position
-                          blurRadius: 2.0,
-                          color: Color.fromRGBO(
-                              255, 220, 80, 1), // Set your stroke color
-                        ),
-                      ],
+                SizedBox(height: 15),
+                SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        side: BorderSide(
+                            width: 5.0, color: Color.fromRGBO(36, 107, 34, 1)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0))),
+                    child: const Text(
+                      "VIEW HIGH SCORES",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontFamily: 'MadimiOne',
+                        color: Color.fromRGBO(36, 107, 34, 1),
+                        shadows: [
+                          Shadow(
+                            // Adjust offsets and blurRadius for stroke thickness
+                            offset: Offset(3.0, 3.0), // Adjust for stroke position
+                            blurRadius: 2.0,
+                            color: Color.fromRGBO(
+                                255, 220, 80, 1), // Set your stroke color
+                          ),
+                        ],
+                      ),
                     ),
+                    onPressed: () {
+                      // Redirect to leaderboard
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Leaderboard(score: 0)));
+                    },
                   ),
-                  onPressed: () {
-                    _onWillPop();
-                  },
                 ),
-              )
-            ]),
+                SizedBox(height: 15),
+                SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        side: BorderSide(
+                            width: 5.0, color: Color.fromRGBO(36, 107, 34, 1)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0))),
+                    child: const Text(
+                      "EXIT",
+                      style: TextStyle(
+                        fontSize: 29,
+                        fontFamily: 'MadimiOne',
+                        color: Color.fromRGBO(36, 107, 34, 1),
+                        shadows: [
+                          Shadow(
+                            // Adjust offsets and blurRadius for stroke thickness
+                            offset: Offset(3.0, 3.0), // Adjust for stroke position
+                            blurRadius: 2.0,
+                            color: Color.fromRGBO(
+                                255, 220, 80, 1), // Set your stroke color
+                          ),
+                        ],
+                      ),
+                    ),
+                    onPressed: () {
+                      _onWillPop();
+                    },
+                  ),
+                )
+              ]),
+            ),
           )]
         )
       ),

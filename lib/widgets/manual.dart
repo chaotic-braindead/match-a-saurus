@@ -32,7 +32,7 @@ class _ManualState extends State<Manual> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 38, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -71,12 +71,12 @@ class _ManualState extends State<Manual> {
                 
                 // how to play title
                 Expanded(
-                  flex: 10,
+                  flex: 9,
                   child: Center(
                     child: Image.asset(
                       'assets/how-to-play-text.png',
                       width: 250.0,
-                      height: 250.0,
+                      height: 200.0,
                     ),
                   ),
                 ),

@@ -62,9 +62,12 @@ class _GameState extends State<Game> {
 
   late double deviceWidth;
   late double deviceHeight;
+  int countDown = 3;
+  bool isCountingDown = true;
 
   @override
   void initState() {
+    startCountDownAndNavigate();
     super.initState();
     _currentPlayer = Database.playerBox
         ?.get("currentPlayer", defaultValue: Player(name: "Guest"));
@@ -98,7 +101,7 @@ class _GameState extends State<Game> {
     String? timerOption = Database.optionsBox?.get("timer")!.split(" ")[0];
     int time = int.parse(timerOption!);
     if (time > 3) {
-      _startTimer(time);
+      _startTimer(time + 3);
       _divider = 0.2;
     } else {
       if(time == 1){
@@ -106,8 +109,23 @@ class _GameState extends State<Game> {
       } else {
         _divider = 2.75;
       }
-      _startTimer(time * 60);
+      _startTimer((time * 60) + 3);
     }
+  }
+
+  void startCountDownAndNavigate() {
+    const oneSecond = Duration(seconds: 1);
+    Timer.periodic(oneSecond, (timer) {
+      if (countDown > 1) {
+        setState(() {
+          countDown--;
+        });
+      } else {
+
+        timer.cancel();
+        isCountingDown = false;   
+      }
+    });
   }
 
   List<CardItem> _shuffleCards(List<CardItem> cards) {
@@ -537,6 +555,8 @@ class _GameState extends State<Game> {
     ]);
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     deviceWidth = MediaQuery.of(context).size.width;
@@ -696,7 +716,24 @@ class _GameState extends State<Game> {
               bottom: 0,
               right: 0,
               child: _musicBtn(),
-            )
+            ),
+            IgnorePointer(
+            ignoring: !isCountingDown,
+            child: Container(
+              color: isCountingDown ? Colors.white : Colors.transparent,
+              child: Center(
+                child: Text(
+                  countDown.toString(),
+                  style: TextStyle(
+                    fontFamily: "MadimiOne",
+                    fontSize: 90,
+                    fontWeight: FontWeight.bold,
+                    color: isCountingDown ? darkGreen : Colors.transparent,
+                  ),
+                ),
+              ),
+            ),
+          ),
       ]),
     );
   }
