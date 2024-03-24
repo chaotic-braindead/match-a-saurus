@@ -2,12 +2,15 @@
 
 import 'dart:async';
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/src/audioplayer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/card_item.dart';
 import 'package:memory_game/models/player.dart';
+import 'package:memory_game/widgets/card_catalog.dart';
 import 'package:memory_game/widgets/card_widget.dart';
 import 'package:memory_game/widgets/home_page.dart';
 import 'package:memory_game/widgets/leaderboard.dart';
@@ -33,7 +36,8 @@ const shadows = [
 ];
 
 class Game extends StatefulWidget {
-  const Game({super.key});
+  final AudioPlayer audioPlayer;
+  const Game({super.key, required this.audioPlayer});
   @override
   State<Game> createState() => _GameState();
 }
@@ -257,7 +261,7 @@ class _GameState extends State<Game> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const HomePage()));
+                                builder: (context) => HomePage(audioPlayer: widget.audioPlayer,)));
                       },
                       child: const Text(
                         "back to main menu",
@@ -294,7 +298,7 @@ class _GameState extends State<Game> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const Game()));
+                                builder: (context) => Game(audioPlayer: widget.audioPlayer,)));
                       },
                       child: const Text(
                         "restart game",
@@ -408,7 +412,7 @@ class _GameState extends State<Game> {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const Game()));
+                                        builder: (context) =>  Game(audioPlayer: widget.audioPlayer,)));
                               },
                               style: ButtonStyle(
                                   shape: MaterialStateProperty.all(
@@ -483,7 +487,7 @@ class _GameState extends State<Game> {
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const HomePage()));
+                    MaterialPageRoute(builder: (context) =>  HomePage(audioPlayer: widget.audioPlayer,)));
               },
               child: Text(
                 "X",
@@ -682,8 +686,51 @@ class _GameState extends State<Game> {
                     color: Colors.white,
                     shadows: shadows),
               ))
-        ])
+        ]),
+        Positioned(
+              bottom: 0,
+              right: 0,
+              child: _musicBtn(),
+            )
       ]),
+    );
+  }
+
+  SizedBox _musicBtn() {
+    return SizedBox(
+     
+      child: Container(
+              height: 40,
+              width: 40,
+              margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              decoration: BoxDecoration(
+                  border: Border.all(color: darkGreen, width: 2.5),
+                  borderRadius: BorderRadius.circular(50),
+                  color: lightGreen1,
+                  boxShadow: [
+                    BoxShadow(
+                      color: lightPink.withOpacity(1),
+                      offset: const Offset(1.85, 3),
+                    )
+                  ]),
+              child: Center(
+                child: IconButton(
+                  icon: isPaused ? const Icon(Icons.music_off_outlined) : const Icon(Icons.music_note),
+                  color: darkGreen,
+                  iconSize: 20,
+                  onPressed: () {
+                    if (isPaused) {
+                      widget.audioPlayer.resume();
+                    } else {
+                      widget.audioPlayer.pause();
+                    }
+                    setState(() {
+                      isPaused = !isPaused;
+                    });
+                  },
+                ),
+              ),
+            )
     );
   }
 }

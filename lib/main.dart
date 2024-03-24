@@ -7,8 +7,9 @@ import 'package:memory_game/models/player.dart';
 import 'package:memory_game/utils/size_config.dart';
 import 'package:memory_game/widgets/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-Future main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -22,8 +23,31 @@ Future main() async {
   runApp(const MemoryGame());
 }
 
-class MemoryGame extends StatelessWidget {
-  const MemoryGame({super.key});
+class MemoryGame extends StatefulWidget {
+  const MemoryGame({Key? key}) : super(key: key);
+
+  @override
+  _MemoryGameState createState() => _MemoryGameState();
+}
+
+class _MemoryGameState extends State<MemoryGame> {
+  final AudioPlayer audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    _playMusic();
+  }
+
+ Future<void> _playMusic() async {
+  audioPlayer.onPlayerComplete.listen((event) {
+    audioPlayer.play(
+      AssetSource('bgmusic.mp3'),
+    );
+  });
+  await audioPlayer.play(AssetSource('bgmusic.mp3'));
+}
+
   @override
   Widget build(BuildContext context) {
     SizeConfig.init(context);
@@ -32,10 +56,17 @@ class MemoryGame extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromRGBO(118, 251, 116, 1)),
+          seedColor: const Color.fromRGBO(118, 251, 116, 1),
+        ),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: HomePage(audioPlayer: audioPlayer),
     );
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
   }
 }
