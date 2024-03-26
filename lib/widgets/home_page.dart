@@ -1,7 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/player.dart';
 import 'package:memory_game/widgets/game.dart';
@@ -12,6 +16,9 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:memory_game/widgets/manual.dart';
 
 bool isPaused = false;
+bool isLoginMode = true;
+bool isSignUpMode = false;
+bool isLoginSignUpDone = false;
 
 final List<String> difficultyList = <String>[
   'Easy (3x4)',
@@ -272,26 +279,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         decoration: BoxDecoration(
             color: Color.fromRGBO(212, 253, 210, 1),
             image: DecorationImage(
                 image: AssetImage("assets/bg-2.png"), fit: BoxFit.cover)),
         child: Stack(children: [
-          Container(
-            padding: const  EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                    _musicBtn(),
-                    _helpBtn()
-                ],
-              ),
-            ),
-          ),
-          
+          Positioned(
+            top: 40,
+            right: 20,
+            child: _helpBtn()),    
           Center(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0,25,0,0),
@@ -490,7 +488,178 @@ class _HomePageState extends State<HomePage> {
                 )
               ]),
             ),
-          )]
+          ),
+          Positioned(
+            bottom: 10,
+            left: 10,
+            child: _logoutBtn(),),
+
+          IgnorePointer(
+            ignoring: isLoginSignUpDone, // ignores pointers to the overlay if login/signup is done
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height, // height of the screen
+              width: MediaQuery.of(context).size.width, // width of the screen
+              child: Opacity(
+                opacity: isLoginSignUpDone ? 0.0 : 1.0, // make entire login/signup overlay disappear
+                child: Stack(
+                  children: [
+                    // black overlay background
+                    Container(
+                      color: Color.fromARGB(255, 42, 50, 44).withOpacity(0.7), 
+                    ),
+            
+                    // blur effect
+                    BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                      child: Stack(
+                        children:[
+                          Center(
+                            child: Image.asset(
+                              isLoginMode ? "assets/login-box.png" : "assets/signup-box.png",
+                              width: 330,),
+                          ),
+                          Container(
+                            //color: Colors.black,
+                            margin: EdgeInsets.fromLTRB(70, 275, 70, 50),
+                            height: 285,
+                            width: 249,
+                            child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                              children:[
+                                TextField(
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.fontSize * 1.8,
+                                    fontFamily: "MadimiOne",
+                                    color: const Color.fromRGBO(147, 123, 107, 1),
+                                  ),
+                                  controller: _playerController,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
+                                  decoration: InputDecoration(
+                                    hintText: "Username",
+                                    helperText: 'X potential error here', // [note1] lagyan ternary op for invalid input/creds mismatch 
+                                    // suggestion: isInvalidCredential ? "Invalid Credentials" : """,
+                                    prefixIcon: const Icon(
+                                      Icons.person,
+                                      color: Colors.green,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0), 
+                                      borderSide: BorderSide.none
+                                    ),
+                                  ),
+                                ),
+                                TextField(
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.fontSize * 1.8,
+                                    fontFamily: "MadimiOne",
+                                    color: const Color.fromRGBO(147, 123, 107, 1),
+                                  ),
+                                  // controller: _playerPassword,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
+                                  decoration: InputDecoration(
+                                    hintText: "Password",
+                                    helperText: 'X potential error here', // [note1] lagyan ternary op for invalid input/creds mismatch
+                                    prefixIcon: const Icon(
+                                      Icons.lock,
+                                      color: Colors.green,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0), 
+                                      borderSide: BorderSide.none
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    
+                                    // Login: Sign-Up button   ;   Sign-Up: Back to Login button
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          if (isLoginMode) {
+                                            // if is in login mode -> switch to sign-up mode
+                                            isLoginMode = false;
+                                            isSignUpMode = true;
+                                          } else {
+                                            // if is in signup mode -> switch to login mode
+                                            isSignUpMode = false;
+                                            isLoginMode = true;
+                                          }
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: darkGreen, backgroundColor: Colors.white, 
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          side: BorderSide(color: darkGreen, width: 1.0), 
+                                        ),
+                                      ),
+                                      child: Text(isLoginMode ? "SIGN-UP" : "BACK"),
+                                    ),
+            
+                                    // Login: Login button   ;   Sign-Up: Sign-up button
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                        if(isLoginMode){
+                                          // check credentials
+                                          // if creds are valid proceed to game:
+                                          isLoginSignUpDone = true;
+                                          // else:
+                                          //   change boolean for ternary helper text for errors[note1]
+                                        
+                                        } else {
+                                          // check creds if valid for new account sign-up
+                                          // if creds valid:
+                                          //     pop-up alert: account created! you can now proceed to login
+                                          //     change to login mode by "isLoginMode = true; isSignUpMode = false;"
+            
+                                          // else:
+                                          //     change boolean for ternary helper text for errors[note1]
+                                        }
+                                      });},
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: darkGreen, backgroundColor: lightGreen1,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          side: BorderSide(color: darkGreen, width: 2.0),
+                                        ),
+                                      ),
+                                      child: Text(isLoginMode ? "LOGIN" : "SIGN-UP"),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                          
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              
+              ),
+              
+            ),
+          ),
+          Positioned(
+            top: 40,
+            left: 20,
+            child: _musicBtn()),
+          ]
         )
       ),
     );
@@ -510,11 +679,9 @@ class _HomePageState extends State<HomePage> {
 
   SizedBox _musicBtn() {
     return SizedBox(
-     
       child: Container(
               height: 50,
               width: 50,
-              //margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               decoration: BoxDecoration(
                   border: Border.all(color: darkGreen, width: 3.0),
                   borderRadius: BorderRadius.circular(50),
@@ -554,7 +721,6 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                   border: Border.all(color: Color.fromARGB(255, 134, 177, 138), width: 3.0),
                   borderRadius: BorderRadius.circular(50),
-                  //color: Color.fromARGB(255, 238, 255, 241),
                   ),
               child: IconButton(
                 icon: const Icon(Icons.question_mark),
@@ -570,6 +736,41 @@ class _HomePageState extends State<HomePage> {
             ),
     );
   }
-  
 
+  IconButton _logoutBtn(){
+    return IconButton(
+      icon: const Icon(Icons.logout),
+      color: Colors.white,
+      onPressed: () {
+        // Show a confirmation dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Logout'),
+              content: Text('Are you sure you want to logout?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    setState(() {Navigator.of(context).pop();
+                    isLoginSignUpDone = false;
+                    });
+                  },
+                  child: Text('Yes'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {Navigator.of(context).pop();
+                    });
+                  },
+                  child: Text('No'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    );
+  }
+  
 }
