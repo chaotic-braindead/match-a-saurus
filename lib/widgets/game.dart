@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/card_item.dart';
 import 'package:memory_game/models/player.dart';
@@ -66,10 +67,9 @@ class _GameState extends State<Game> {
   void initState() {
     startCountDownAndNavigate();
     super.initState();
-    _currentPlayer = Database.playerBox
-        ?.get("currentPlayer", defaultValue: Player(name: "Guest"));
+    _currentPlayer = Database.playerBox?.get("currentPlayer");
+    _currentPlayer!.score = 0;
     _pb = Database.playerBox?.get("personalBest");
-
     _difficulty = Database.optionsBox?.get("difficulty")!;
     int? score = Database.playerBox?.get("personalBest")?.score;
     if (score != null) {
@@ -146,10 +146,11 @@ class _GameState extends State<Game> {
     }
   }
 
-  void _addScore() async {
+  Future<void> _addScore() async {
     if (_pb == null || (_currentPlayer?.score)! > (_pb?.score)!) {
       _pb = _currentPlayer;
-      await Database.playerBox?.put("personalBest", _currentPlayer!);
+      await Database.playerBox?.put("personalBest",
+          Player(name: _currentPlayer!.name, score: _currentPlayer!.score));
     }
     var value = await Database.firebase
         .collection("players")
@@ -173,7 +174,7 @@ class _GameState extends State<Game> {
 
   void _startTimer(int time) {
     _counter = time;
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (_counter > 0) {
         setState(() {
           --_counter;
@@ -181,7 +182,7 @@ class _GameState extends State<Game> {
       } else {
         timer.cancel();
         _currentPlayer?.score = _score;
-        _addScore();
+        await _addScore();
         showDialog(
             context: context,
             barrierDismissible: false,
@@ -191,7 +192,7 @@ class _GameState extends State<Game> {
     });
   }
 
-  void _handleTap(CardItem card) {
+  void _handleTap(CardItem card) async {
     if (_counter == 0 || card.isTapped) {
       return;
     }
@@ -226,7 +227,7 @@ class _GameState extends State<Game> {
     if (_validPairs.length == _cards.length) {
       _timer.cancel();
       _currentPlayer?.score = _score;
-      _addScore();
+      await _addScore();
       showDialog(
           context: context,
           barrierDismissible: false,

@@ -75,10 +75,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _updateCurrentPlayer(Player newPlayer) async {
-    if (newPlayer.name != "Guest") {
-      await Database.playerBox?.put("currentPlayer", newPlayer);
-      setState(() => currentPlayer?.name = _playerController.text);
-    }
+    await Database.playerBox?.put("currentPlayer", newPlayer);
+    await Database.playerBox
+        ?.put("personalBest", Player(name: newPlayer.name, score: 0));
+    setState(() => currentPlayer?.name = _playerController.text);
   }
 
   Widget _buildOptionsDialog(BuildContext context) {
@@ -680,7 +680,6 @@ class _HomePageState extends State<HomePage> {
                                               });
                                             });
                                           } else {
-                                            bool err = false;
                                             Database.firebase
                                                 .collection("players")
                                                 .doc(_playerController.text)

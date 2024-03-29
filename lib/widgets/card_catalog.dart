@@ -146,8 +146,6 @@ class _CardCatalogState extends State<CardCatalog> {
       0; // set first card as default card when opening card catalog
   final int _itemCount = 18; // total number of unique dino cards
 
-  
-
   void _handleCardTap(int index) {
     setState(() {
       _selectedIndex = index;
@@ -187,7 +185,9 @@ class _CardCatalogState extends State<CardCatalog> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HomePage(audioPlayer: widget.audioPlayer,)));
+                          builder: (context) => HomePage(
+                                audioPlayer: widget.audioPlayer,
+                              )));
                 },
               ),
             )
@@ -354,67 +354,63 @@ class _CardCatalogState extends State<CardCatalog> {
 
   SizedBox _musicBtn() {
     return SizedBox(
-     
-      child: Container(
-              height: 35,
-              width: 35,
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              decoration: BoxDecoration(
-                  border: Border.all(color: darkGreen, width: 2.0),
-                  borderRadius: BorderRadius.circular(50),
-                  color: lightGreen1,
-                  boxShadow: [
-                    BoxShadow(
-                      color: lightPink.withOpacity(1),
-                      offset: const Offset(1.85, 3),
-                    )
-                  ]),
-              child: Center(
-                child: IconButton(
-                  icon: isPaused ? const Icon(Icons.music_off_outlined) : const Icon(Icons.music_note),
-                  color: darkGreen,
-                  iconSize: 15,
-                  onPressed: () {
-                    if (isPaused) {
-                      widget.audioPlayer.resume();
-                    } else {
-                      widget.audioPlayer.pause();
-                    }
-                    setState(() {
-                      isPaused = !isPaused;
-                    });
-                  },
-                ),
-              ),
+        child: Container(
+      height: 35,
+      width: 35,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+          border: Border.all(color: darkGreen, width: 2.0),
+          borderRadius: BorderRadius.circular(50),
+          color: lightGreen1,
+          boxShadow: [
+            BoxShadow(
+              color: lightPink.withOpacity(1),
+              offset: const Offset(1.85, 3),
             )
-    );
+          ]),
+      child: Center(
+        child: IconButton(
+          icon: isPaused
+              ? const Icon(Icons.music_off_outlined)
+              : const Icon(Icons.music_note),
+          color: darkGreen,
+          iconSize: 15,
+          onPressed: () {
+            if (isPaused) {
+              widget.audioPlayer.resume();
+            } else {
+              widget.audioPlayer.pause();
+            }
+            setState(() {
+              isPaused = !isPaused;
+            });
+          },
+        ),
+      ),
+    ));
   }
 
-Widget buildRichText(String label, String detail) {
-  return RichText(
-    text: TextSpan(
-      children: [
-        TextSpan(
-          text: label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: darkGreen,
+  Widget buildRichText(String label, String detail) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: label,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: darkGreen,
+            ),
           ),
-        ),
-        TextSpan(
-          text: detail,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color.fromARGB(255, 182, 132, 121),
+          TextSpan(
+            text: detail,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 182, 132, 121),
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-
-
-
-  
-}
+        ],
+      ),
+    );
+  }
 }

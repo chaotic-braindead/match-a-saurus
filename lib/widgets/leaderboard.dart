@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/player.dart';
 import 'package:memory_game/utils/size_config.dart';
-import 'package:memory_game/widgets/home_page.dart';
 import 'package:memory_game/widgets/player_widget.dart';
 
 class Leaderboard extends StatefulWidget {
@@ -26,18 +25,19 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   void initState() {
-    super.initState();
     _isLoading = true;
-    _currentPlayer = Database.playerBox
-        ?.get("currentPlayer", defaultValue: Player(name: "Guest"));
+    _pb = Database.playerBox?.get("personalBest");
+    print(_pb);
+    print(_pb?.score);
+    _currentPlayer = Database.playerBox?.get("currentPlayer");
     _currentPlayer?.score = widget.score;
     _scores = [];
-    _getLeaderboard();
-    _pb = Database.playerBox?.get("personalBest");
     if (_pb == null) {
       _pb = _currentPlayer;
       Database.playerBox?.put("personalBest", _currentPlayer!);
     }
+    _getLeaderboard();
+    super.initState();
   }
 
   void _getLeaderboard() {
