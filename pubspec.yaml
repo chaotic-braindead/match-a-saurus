@@ -30,13 +30,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  audioplayers: 1.1.0
 
   stroke_text: any
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
+  audioplayers: 1.1.0
   hive: any
   hive_flutter: any
   hive_generator: ^2.0.1

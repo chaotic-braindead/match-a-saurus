@@ -104,7 +104,7 @@ class _GameState extends State<Game> {
       _startTimer(time + 3);
       _divider = 0.2;
     } else {
-      if(time == 1){
+      if (time == 1) {
         _divider = 1.5;
       } else {
         _divider = 2.75;
@@ -121,9 +121,8 @@ class _GameState extends State<Game> {
           countDown--;
         });
       } else {
-
         timer.cancel();
-        isCountingDown = false;   
+        isCountingDown = false;
       }
     });
   }
@@ -211,7 +210,7 @@ class _GameState extends State<Game> {
 
     if (_tappedCard?.val == card.val) {
       setState(() {
-        _score += ((_counter / _divider)*_multiplier).truncate();
+        _score += ((_counter / _divider) * _multiplier).truncate();
         //_score = (_score * _multiplier).truncate();
         _validPairs.add(_tappedCard!);
         _validPairs.add(card);
@@ -222,7 +221,7 @@ class _GameState extends State<Game> {
       }
     } else {
       setState(() => _enableTaps = false);
-      Timer(const Duration(milliseconds: 500), () {
+      Timer(const Duration(milliseconds: 700), () {
         card.isTapped = false;
         setState(() {
           _tappedCard?.isTapped = false;
@@ -284,7 +283,9 @@ class _GameState extends State<Game> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomePage(audioPlayer: widget.audioPlayer,)));
+                                builder: (context) => HomePage(
+                                      audioPlayer: widget.audioPlayer,
+                                    )));
                       },
                       child: const Text(
                         "back to main menu",
@@ -321,7 +322,9 @@ class _GameState extends State<Game> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Game(audioPlayer: widget.audioPlayer,)));
+                                builder: (context) => Game(
+                                      audioPlayer: widget.audioPlayer,
+                                    )));
                       },
                       child: const Text(
                         "restart game",
@@ -435,7 +438,9 @@ class _GameState extends State<Game> {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>  Game(audioPlayer: widget.audioPlayer,)));
+                                        builder: (context) => Game(
+                                              audioPlayer: widget.audioPlayer,
+                                            )));
                               },
                               style: ButtonStyle(
                                   shape: MaterialStateProperty.all(
@@ -509,8 +514,12 @@ class _GameState extends State<Game> {
                           width: 4, color: Color.fromRGBO(36, 107, 34, 1))))),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) =>  HomePage(audioPlayer: widget.audioPlayer,)));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              audioPlayer: widget.audioPlayer,
+                            )));
               },
               child: Text(
                 "X",
@@ -554,8 +563,6 @@ class _GameState extends State<Game> {
       ),
     ]);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -674,7 +681,9 @@ class _GameState extends State<Game> {
         Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
             //color: Colors.red,
-            margin: (_rows == 4) || (_rows == 3) ? EdgeInsets.fromLTRB(40, 143, 40, 0): EdgeInsets.fromLTRB(20, 155, 20, 0),
+            margin: (_rows == 4) || (_rows == 3)
+                ? EdgeInsets.fromLTRB(40, 143, 40, 0)
+                : EdgeInsets.fromLTRB(20, 155, 20, 0),
             child: GridView.count(
                 shrinkWrap: true,
                 //padding: (_rows == 4) || (_rows == 3) ? EdgeInsets.fromLTRB(50, 140, 40, 0): EdgeInsets.fromLTRB(30, 145, 30, 0),
@@ -693,7 +702,9 @@ class _GameState extends State<Game> {
           Container(
               width: 130,
               height: 30,
-              margin: (_rows == 4) || (_rows == 3) ? EdgeInsets.fromLTRB(2, 12, 2, 2) : EdgeInsets.fromLTRB(2, 20, 2, 2),
+              margin: (_rows == 4) || (_rows == 3)
+                  ? EdgeInsets.fromLTRB(2, 12, 2, 2)
+                  : EdgeInsets.fromLTRB(2, 20, 2, 2),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   border:
@@ -713,66 +724,66 @@ class _GameState extends State<Game> {
               ))
         ]),
         Positioned(
-              bottom: 0,
-              right: 0,
-              child: _musicBtn(),
-            ),
-            IgnorePointer(
-            ignoring: !isCountingDown,
-            child: Container(
-              color: isCountingDown ? Colors.white : Colors.transparent,
-              child: Center(
-                child: Text(
-                  countDown.toString(),
-                  style: TextStyle(
-                    fontFamily: "MadimiOne",
-                    fontSize: 90,
-                    fontWeight: FontWeight.bold,
-                    color: isCountingDown ? darkGreen : Colors.transparent,
-                  ),
+          bottom: 0,
+          right: 0,
+          child: _musicBtn(),
+        ),
+        IgnorePointer(
+          ignoring: !isCountingDown,
+          child: Container(
+            color: isCountingDown ? Colors.white : Colors.transparent,
+            child: Center(
+              child: Text(
+                countDown.toString(),
+                style: TextStyle(
+                  fontFamily: "MadimiOne",
+                  fontSize: 90,
+                  fontWeight: FontWeight.bold,
+                  color: isCountingDown ? darkGreen : Colors.transparent,
                 ),
               ),
             ),
           ),
+        ),
       ]),
     );
   }
 
   SizedBox _musicBtn() {
     return SizedBox(
-     
-      child: Container(
-              height: 40,
-              width: 40,
-              margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              decoration: BoxDecoration(
-                  border: Border.all(color: darkGreen, width: 2.5),
-                  borderRadius: BorderRadius.circular(50),
-                  color: lightGreen1,
-                  boxShadow: [
-                    BoxShadow(
-                      color: lightPink.withOpacity(1),
-                      offset: const Offset(1.85, 3),
-                    )
-                  ]),
-              child: Center(
-                child: IconButton(
-                  icon: isPaused ? const Icon(Icons.music_off_outlined) : const Icon(Icons.music_note),
-                  color: darkGreen,
-                  iconSize: 20,
-                  onPressed: () {
-                    if (isPaused) {
-                      widget.audioPlayer.resume();
-                    } else {
-                      widget.audioPlayer.pause();
-                    }
-                    setState(() {
-                      isPaused = !isPaused;
-                    });
-                  },
-                ),
-              ),
+        child: Container(
+      height: 40,
+      width: 40,
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      decoration: BoxDecoration(
+          border: Border.all(color: darkGreen, width: 2.5),
+          borderRadius: BorderRadius.circular(50),
+          color: lightGreen1,
+          boxShadow: [
+            BoxShadow(
+              color: lightPink.withOpacity(1),
+              offset: const Offset(1.85, 3),
             )
-    );
+          ]),
+      child: Center(
+        child: IconButton(
+          icon: isPaused
+              ? const Icon(Icons.music_off_outlined)
+              : const Icon(Icons.music_note),
+          color: darkGreen,
+          iconSize: 20,
+          onPressed: () {
+            if (isPaused) {
+              widget.audioPlayer.resume();
+            } else {
+              widget.audioPlayer.pause();
+            }
+            setState(() {
+              isPaused = !isPaused;
+            });
+          },
+        ),
+      ),
+    ));
   }
 }
