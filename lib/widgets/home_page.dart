@@ -75,10 +75,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _updateCurrentPlayer(Player newPlayer) async {
-    await Database.playerBox?.put("currentPlayer", newPlayer);
-    await Database.playerBox
-        ?.put("personalBest", Player(name: newPlayer.name, score: 0));
-    setState(() => currentPlayer?.name = _playerController.text);
+    if (newPlayer.name != "Guest") {
+      await Database.playerBox?.put("currentPlayer", newPlayer);
+      setState(() => currentPlayer?.name = _playerController.text);
+    }
   }
 
   Widget _buildOptionsDialog(BuildContext context) {
@@ -532,7 +532,7 @@ class _HomePageState extends State<HomePage> {
                               //color: Colors.black,
                               margin: EdgeInsets.fromLTRB(70,
                                   SizeConfig.blockSizeVertical * 33, 70, 50),
-                              height: SizeConfig.blockSizeVertical * 41,
+                              height: SizeConfig.blockSizeVertical * 42,
                               width: 249,
                               child: Column(
                                 mainAxisAlignment:
