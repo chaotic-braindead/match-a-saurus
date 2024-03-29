@@ -530,8 +530,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Container(
                               //color: Colors.black,
-                              margin: EdgeInsets.fromLTRB(70, 275, 70, 50),
-                              height: 285,
+                              margin: EdgeInsets.fromLTRB(70,
+                                  SizeConfig.blockSizeVertical * 33, 70, 50),
+                              height: SizeConfig.blockSizeVertical * 41,
                               width: 249,
                               child: Column(
                                 mainAxisAlignment:
