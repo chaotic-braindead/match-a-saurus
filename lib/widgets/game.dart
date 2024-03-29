@@ -3,10 +3,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:audioplayers/src/audioplayer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:memory_game/db/db.dart';
 import 'package:memory_game/models/card_item.dart';
 import 'package:memory_game/models/player.dart';
@@ -154,9 +151,6 @@ class _GameState extends State<Game> {
       _pb = _currentPlayer;
       await Database.playerBox?.put("personalBest", _currentPlayer!);
     }
-    if (_currentPlayer?.name == "Guest") {
-      return;
-    }
     var value = await Database.firebase
         .collection("players")
         .doc(_currentPlayer?.name)
@@ -211,7 +205,6 @@ class _GameState extends State<Game> {
     if (_tappedCard?.val == card.val) {
       setState(() {
         _score += ((_counter / _divider) * _multiplier).truncate();
-        //_score = (_score * _multiplier).truncate();
         _validPairs.add(_tappedCard!);
         _validPairs.add(card);
         _tappedCard = null;

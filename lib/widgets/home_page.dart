@@ -13,8 +13,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:memory_game/widgets/manual.dart';
 
 bool isPaused = false;
-bool isLoginMode = true;
-bool isLoginSignUpDone = false;
 
 final List<String> difficultyList = <String>[
   'Easy (3x4)',
@@ -39,6 +37,8 @@ class _HomePageState extends State<HomePage> {
   late Player? currentPlayer;
   late TextEditingController _playerController;
   late TextEditingController _playerPassword;
+  bool isLoginMode = true;
+  bool isLoginSignUpDone = false;
   String userErrorMsg = "";
   String passwordErrorMsg = "";
   String _difficulty = difficultyList.first;
@@ -662,11 +662,21 @@ class _HomePageState extends State<HomePage> {
                                                 });
                                                 return;
                                               }
-                                              setState(() =>
-                                                  isLoginSignUpDone = true);
-                                              _updateCurrentPlayer(Player(
-                                                  name:
-                                                      _playerController.text));
+                                              Database.playerBox
+                                                  ?.put(
+                                                      "personalBest",
+                                                      Player(
+                                                          name: user
+                                                              .data()?["name"],
+                                                          score: user.data()?[
+                                                              "score"]))
+                                                  .whenComplete(() {
+                                                setState(() =>
+                                                    isLoginSignUpDone = true);
+                                                _updateCurrentPlayer(Player(
+                                                    name: _playerController
+                                                        .text));
+                                              });
                                             });
                                           } else {
                                             bool err = false;
